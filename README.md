@@ -6,87 +6,66 @@ Luxury flower studio and event decoration platform for Ethiopia.
 
 ## Tech Stack
 
-- **Next.js 16** (App Router) + TypeScript
-- **Tailwind CSS v4** + custom design system
-- **Framer Motion** — elegant animations
-- **Three.js / React Three Fiber** — 3D experiences (coming)
-- **Supabase** — Auth, PostgreSQL, Storage, Realtime
-- **React Hook Form + Zod** — forms & validation
-- **Lucide Icons**
-- **Vercel** ready
+- Next.js 16 (App Router) + TypeScript
+- Tailwind CSS v4 + custom luxury design system
+- Framer Motion + React Three Fiber (3D hero)
+- Supabase-ready (Auth, PostgreSQL, Storage, Realtime)
+- React Hook Form + Zod
+- Lucide Icons · Vercel
 
 ## Features
 
-- Cinematic hero with floating floral elements
-- Design gallery with categories & filters
-- Custom flower design builder
+- Cinematic 3D hero with floating flowers (reduced-motion & low-end fallbacks)
+- Design gallery with search, filters, detail pages
+- Custom flower design builder (7-step wizard)
 - Event decoration booking system
-- Full e-commerce order flow
-- Customer dashboard
-- Admin dashboard with analytics
-- Ethiopia-specific (ETB, cities, Telebirr/CBE ready)
-- Realtime order tracking architecture
-- Secure RLS policies
+- Full cart, checkout (ETB, Ethiopian cities, COD/bank transfer)
+- Order tracking (customer + admin status updates)
+- Customer auth & account dashboard
+- Admin dashboard (orders, designs, analytics shell)
+- Flowers shop, About, Contact, FAQ
+- Floating WhatsApp button
+- SEO: metadata, sitemap, robots.txt
 
 ## Getting Started
 
 ```bash
-# Install dependencies
 npm install
-
-# Copy environment variables
 cp .env.example .env.local
-# Fill in your Supabase keys
-
-# Run the development server
+# Add Supabase keys when ready
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Database Setup
+## Database
 
-1. Create a new Supabase project
-2. Run the SQL in `supabase/schema.sql` in the SQL Editor
-3. Create storage buckets: `product-images`, `gallery-images`, `event-images`, `customer-uploads`, `videos`, `site-assets`
-4. Add your Supabase URL and anon key to `.env.local`
+1. Create a Supabase project
+2. Run `supabase/schema.sql` in the SQL Editor
+3. Create storage buckets listed in the schema comments
+4. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-## Project Structure
+## Deploy (Vercel)
 
-```
-src/
-├── app/                  # Next.js App Router pages
-│   ├── (auth)/           # Login & Register
-│   ├── admin/            # Admin dashboard
-│   ├── designs/          # Design gallery
-│   ├── flowers/          # Flower products
-│   ├── booking/          # Event booking
-│   └── ...
-├── components/
-│   ├── ui/               # Base UI components
-│   ├── layout/           # Navbar, Footer
-│   ├── home/             # Homepage sections
-│   └── ...
-├── lib/
-│   ├── supabase/         # Supabase clients
-│   └── utils.ts
-├── types/                # TypeScript types
-└── hooks/
+```bash
+npx vercel
 ```
 
-## Current Status
+Or connect the GitHub repo in the Vercel dashboard. Set env vars for production.
 
-✅ Project foundation & design system  
-✅ Homepage with Hero, Featured Designs, Occasions, CTA  
-✅ Navbar & Footer  
-✅ Full database schema + RLS  
-✅ Supabase client setup  
-✅ Core routing structure  
-🚧 Full gallery, custom builder, booking forms  
-🚧 3D flower experience  
-🚧 Admin dashboard  
-🚧 Authentication flows  
-🚧 Order system  
+## Key routes
+
+| Route | Description |
+|-------|-------------|
+| `/` | Homepage + 3D hero |
+| `/designs` | Design gallery |
+| `/custom-design` | Build your own |
+| `/booking` | Event decoration booking |
+| `/flowers` | Flower products |
+| `/cart` → `/checkout` | E-commerce flow |
+| `/orders` | Order history |
+| `/admin` | Admin dashboard |
+| `/login` `/register` | Auth |
 
 ---
 
