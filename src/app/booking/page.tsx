@@ -29,7 +29,7 @@ export default function BookingPage() {
             Event Decoration Booking
           </h1>
           <p className="text-muted-foreground max-w-lg mx-auto">
-            Tell us about your event and we'll create a stunning decoration plan
+            Tell us about your event and we&apos;ll create a stunning decoration plan
             tailored to your vision, venue, and budget.
           </p>
         </motion.div>
