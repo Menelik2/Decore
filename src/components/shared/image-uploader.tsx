@@ -160,7 +160,7 @@ export function ImageUploader({
             className="hidden"
             onChange={(e) => {
               if (e.target.files) processFiles(e.target.files)
-            }
+            }}
           />
 
           {uploading ? (
