@@ -5,6 +5,8 @@ import {
   useContext,
   useReducer,
   useEffect,
+  useState,
+  useCallback,
   type ReactNode,
 } from "react"
 import type { CartItem } from "@/types"
@@ -37,7 +39,7 @@ function cartReducer(state: CartState, action: CartAction): CartState {
         }
       }
       return {
-        items: [...state.items, { ...action.item, quantity: qty }],
+        items: [...state.items, { ...action.item, quantity: qty } as CartItem],
       }
     }
     case "REMOVE":
@@ -62,6 +64,7 @@ type CartContextValue = {
   items: CartItem[]
   itemCount: number
   subtotal: number
+  isHydrated: boolean
   addItem: (item: Omit<CartItem, "quantity"> & { quantity?: number }) => void
   removeItem: (id: string) => void
   updateQuantity: (id: string, quantity: number) => void
@@ -72,30 +75,48 @@ const CartContext = createContext<CartContextValue | null>(null)
 
 const STORAGE_KEY = "decore-cart"
 
+function isValidCartItem(item: unknown): item is CartItem {
+  if (!item || typeof item !== "object") return false
+  const i = item as Record<string, unknown>
+  return (
+    typeof i.id === "string" &&
+    typeof i.name === "string" &&
+    typeof i.price === "number" &&
+    typeof i.quantity === "number" &&
+    i.quantity > 0
+  )
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, { items: [] })
+  // Prevent persist-from-empty wiping localStorage before hydrate finishes
+  const [isHydrated, setIsHydrated] = useState(false)
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
       if (raw) {
-        const items = JSON.parse(raw) as CartItem[]
-        if (Array.isArray(items)) {
+        const parsed = JSON.parse(raw) as unknown
+        if (Array.isArray(parsed)) {
+          const items = parsed.filter(isValidCartItem)
           dispatch({ type: "HYDRATE", items })
         }
       }
     } catch {
-      // ignore
+      // ignore corrupt storage
+    } finally {
+      setIsHydrated(true)
     }
   }, [])
 
   useEffect(() => {
+    if (!isHydrated) return
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items))
     } catch {
-      // ignore
+      // ignore quota / private mode
     }
-  }, [state.items])
+  }, [state.items, isHydrated])
 
   const itemCount = state.items.reduce((sum, i) => sum + i.quantity, 0)
   const subtotal = state.items.reduce(
@@ -103,17 +124,33 @@ export function CartProvider({ children }: { children: ReactNode }) {
     0
   )
 
+  const addItem = useCallback(
+    (item: Omit<CartItem, "quantity"> & { quantity?: number }) => {
+      dispatch({ type: "ADD", item })
+    },
+    []
+  )
+  const removeItem = useCallback((id: string) => {
+    dispatch({ type: "REMOVE", id })
+  }, [])
+  const updateQuantity = useCallback((id: string, quantity: number) => {
+    dispatch({ type: "UPDATE_QTY", id, quantity })
+  }, [])
+  const clearCart = useCallback(() => {
+    dispatch({ type: "CLEAR" })
+  }, [])
+
   return (
     <CartContext.Provider
       value={{
         items: state.items,
         itemCount,
         subtotal,
-        addItem: (item) => dispatch({ type: "ADD", item }),
-        removeItem: (id) => dispatch({ type: "REMOVE", id }),
-        updateQuantity: (id, quantity) =>
-          dispatch({ type: "UPDATE_QTY", id, quantity }),
-        clearCart: () => dispatch({ type: "CLEAR" }),
+        isHydrated,
+        addItem,
+        removeItem,
+        updateQuantity,
+        clearCart,
       }}
     >
       {children}
