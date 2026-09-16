@@ -40,10 +40,11 @@ export default function DesignDetailPage({
 
   const related = getRelatedDesigns(design)
 
+  const imageCount = design.images.length || 1
   const nextImage = () =>
-    setActiveImage((i) => (i + 1) % design.images.length)
+    setActiveImage((i) => (i + 1) % imageCount)
   const prevImage = () =>
-    setActiveImage((i) => (i - 1 + design.images.length) % design.images.length)
+    setActiveImage((i) => (i - 1 + imageCount) % imageCount)
 
   const handleAddToCart = () => {
     addItem({
