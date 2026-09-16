@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import {
   ArrowLeft,
@@ -63,8 +62,7 @@ const DELIVERY_FEES: Record<string, number> = {
 }
 
 export default function CheckoutPage() {
-  const router = useRouter()
-  const { items, subtotal, clearCart } = useCart()
+  const { items, subtotal, clearCart, isHydrated } = useCart()
 
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
@@ -83,6 +81,14 @@ export default function CheckoutPage() {
   const freeThreshold = city === "Addis Ababa" ? 3000 : 5000
   const deliveryFee = subtotal >= freeThreshold ? 0 : baseFee
   const total = subtotal + deliveryFee
+
+  if (!isHydrated) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center pt-24">
+        <p className="text-muted-foreground animate-pulse">Loading...</p>
+      </div>
+    )
+  }
 
   if (items.length === 0 && !placed) {
     return (
@@ -117,7 +123,7 @@ export default function CheckoutPage() {
             Order #{orderNumber}
           </p>
           <p className="text-sm text-muted-foreground mb-8">
-            We&apos;ll confirm on {phone}. Total: {formatPrice(total)}
+            We'll confirm on {phone}. Total: {formatPrice(total)}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href={`/orders/${orderNumber}`}>
@@ -423,7 +429,7 @@ export default function CheckoutPage() {
               </Button>
 
               <p className="text-xs text-muted-foreground text-center">
-                By placing this order you agree to our terms. We&apos;ll confirm by phone.
+                By placing this order you agree to our terms. We'll confirm by phone.
               </p>
             </div>
           </div>
