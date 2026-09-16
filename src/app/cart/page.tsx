@@ -8,7 +8,15 @@ import { useCart } from "@/lib/cart-context"
 import { formatPrice } from "@/lib/utils"
 
 export default function CartPage() {
-  const { items, subtotal, updateQuantity, removeItem, clearCart } = useCart()
+  const { items, subtotal, updateQuantity, removeItem, clearCart, isHydrated } = useCart()
+
+  if (!isHydrated) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center pt-24">
+        <p className="text-muted-foreground animate-pulse">Loading cart...</p>
+      </div>
+    )
+  }
 
   if (items.length === 0) {
     return (
