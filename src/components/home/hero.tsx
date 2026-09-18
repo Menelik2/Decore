@@ -1,9 +1,15 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useRef } from "react"
+
+const HeroCanvas = dynamic(
+  () => import("./three/hero-canvas").then((m) => m.HeroCanvas),
+  { ssr: false, loading: () => null }
+)
 
 function GlassPanel({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -55,7 +61,7 @@ function GlassPanel({ children }: { children: React.ReactNode }) {
       initial={{ opacity: 0, y: 28, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      className="glass-strong rounded-[28px] p-6 sm:p-8 text-center pointer-events-auto will-change-transform"
+      className="glass-strong rounded-[28px] p-6 sm:p-8 text-center pointer-events-auto will-change-transform relative z-10"
     >
       {children}
     </motion.div>
@@ -65,18 +71,25 @@ function GlassPanel({ children }: { children: React.ReactNode }) {
 export function Hero() {
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden glass-mesh">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
+      <HeroCanvas />
+
+      <div className="absolute inset-0 pointer-events-none z-[1]" aria-hidden>
         <motion.div
-          className="absolute top-[18%] left-[12%] h-36 w-36 rounded-full bg-blush/25 blur-3xl"
+          className="absolute top-[18%] left-[12%] h-36 w-36 rounded-full bg-blush/20 blur-3xl"
           animate={{ y: [0, 16, 0], x: [0, 10, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-[22%] right-[10%] h-44 w-44 rounded-full bg-gold/15 blur-3xl"
+          className="absolute bottom-[22%] right-[10%] h-44 w-44 rounded-full bg-gold/12 blur-3xl"
           animate={{ y: [0, -14, 0], x: [0, -8, 0] }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
+
+      <div
+        className="absolute inset-0 z-[2] pointer-events-none bg-gradient-to-b from-[#f5f5f7]/50 via-transparent to-[#f5f5f7]/70"
+        aria-hidden
+      />
 
       <div className="relative z-10 mx-auto max-w-xl w-full px-4 sm:px-5 pt-20 pb-12">
         <GlassPanel>
