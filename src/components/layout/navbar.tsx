@@ -26,73 +26,111 @@ export function Navbar() {
   if (pathname?.startsWith("/admin")) return null
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20)
+    const handleScroll = () => setScrolled(window.scrollY > 8)
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  useEffect(() => {
+    setIsOpen(false)
+  }, [pathname])
+
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-border/50"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "pt-[env(safe-area-inset-top)]",
+        scrolled || isOpen
+          ? "bg-white/75 backdrop-blur-[20px] backdrop-saturate-180 border-b border-black/[0.06]"
           : "bg-transparent"
       )}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 md:h-20 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-2xl">🌸</span>
-            <span className="font-serif text-xl md:text-2xl font-semibold tracking-tight text-deep-burgundy group-hover:text-primary transition-colors">
+      <div className="mx-auto max-w-7xl px-4 sm:px-5 lg:px-8">
+        <div className="flex h-12 md:h-14 items-center justify-between">
+          <Link href="/" className="flex items-center gap-1.5 group pressable">
+            <span className="text-xl leading-none">🌸</span>
+            <span className="text-[17px] font-semibold tracking-tight text-label group-hover:text-primary transition-colors">
               Decore
             </span>
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-4 py-2 text-sm font-medium text-foreground/80 hover:text-primary transition-colors rounded-full hover:bg-secondary/50"
-              >
-                {link.label}
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center gap-0.5">
+            {navLinks.map((link) => {
+              const active = pathname === link.href || pathname?.startsWith(link.href + "/")
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "px-3.5 py-1.5 text-[13px] font-medium rounded-full transition-colors duration-200",
+                    active
+                      ? "text-primary bg-primary/8"
+                      : "text-label-secondary hover:text-label hover:bg-fill-secondary"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              )
+            })}
           </nav>
 
-          <div className="flex items-center gap-1 sm:gap-2">
-            <Button variant="ghost" size="icon" className="hidden sm:flex" aria-label="Search">
-              <Search className="h-5 w-5" />
+          <div className="flex items-center gap-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="hidden sm:flex h-11 w-11 text-label-secondary hover:text-label"
+              aria-label="Search"
+            >
+              <Search className="h-[20px] w-[20px] stroke-[1.75]" />
             </Button>
             <Link href="/favorites">
-              <Button variant="ghost" size="icon" aria-label="Favorites">
-                <Heart className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-11 w-11 text-label-secondary hover:text-label"
+                aria-label="Favorites"
+              >
+                <Heart className="h-[20px] w-[20px] stroke-[1.75]" />
               </Button>
             </Link>
             <Link href="/cart">
-              <Button variant="ghost" size="icon" className="relative" aria-label="Cart">
-                <ShoppingBag className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative h-11 w-11 text-label-secondary hover:text-label"
+                aria-label="Cart"
+              >
+                <ShoppingBag className="h-[20px] w-[20px] stroke-[1.75]" />
                 {itemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
+                  <span className="absolute top-1.5 right-1.5 flex h-[17px] min-w-[17px] items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-white leading-none">
                     {itemCount > 9 ? "9+" : itemCount}
                   </span>
                 )}
               </Button>
             </Link>
             <Link href="/account" className="hidden sm:block">
-              <Button variant="ghost" size="icon" aria-label="Account">
-                <User className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-11 w-11 text-label-secondary hover:text-label"
+                aria-label="Account"
+              >
+                <User className="h-[20px] w-[20px] stroke-[1.75]" />
               </Button>
             </Link>
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden"
+              className="lg:hidden h-11 w-11 text-label-secondary hover:text-label"
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Menu"
+              aria-expanded={isOpen}
             >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isOpen ? (
+                <X className="h-[22px] w-[22px] stroke-[1.75]" />
+              ) : (
+                <Menu className="h-[22px] w-[22px] stroke-[1.75]" />
+              )}
             </Button>
           </div>
         </div>
@@ -101,25 +139,36 @@ export function Navbar() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white/95 backdrop-blur-md border-t border-border"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+            className="lg:hidden border-t border-black/[0.06] bg-white/90 backdrop-blur-[24px] backdrop-saturate-180"
           >
-            <nav className="flex flex-col px-4 py-4 gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-3 text-base font-medium text-foreground hover:text-primary hover:bg-secondary/50 rounded-xl transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <div className="mt-2 pt-2 border-t border-border flex gap-2">
+            <nav className="flex flex-col px-3 py-3 gap-0.5 pb-[max(1rem,env(safe-area-inset-bottom))]">
+              {navLinks.map((link) => {
+                const active = pathname === link.href
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "px-4 py-3.5 text-[17px] font-medium rounded-xl transition-colors min-h-[48px] flex items-center",
+                      active
+                        ? "text-primary bg-primary/8"
+                        : "text-label hover:bg-fill-secondary"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
+              <div className="mt-2 pt-3 border-t border-black/[0.06] flex gap-2.5 px-1">
                 <Link href="/login" className="flex-1" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full">Sign In</Button>
+                  <Button variant="secondary" className="w-full">
+                    Sign In
+                  </Button>
                 </Link>
                 <Link href="/register" className="flex-1" onClick={() => setIsOpen(false)}>
                   <Button className="w-full">Sign Up</Button>

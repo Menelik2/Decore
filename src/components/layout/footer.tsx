@@ -30,64 +30,50 @@ export function Footer() {
   if (pathname?.startsWith("/admin")) return null
 
   return (
-    <footer className="bg-deep-burgundy text-white">
-      {/* Main Footer */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+    <footer className="bg-[#1d1d1f] text-white pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 py-14 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
-          {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2 mb-4">
-              <span className="text-2xl">🌸</span>
-              <span className="font-serif text-2xl font-semibold tracking-tight">
+            <Link href="/" className="inline-flex items-center gap-1.5 mb-4 pressable">
+              <span className="text-xl">🌸</span>
+              <span className="text-[19px] font-semibold tracking-tight">
                 Decore
               </span>
             </Link>
-            <p className="text-white/70 text-sm leading-relaxed max-w-sm mb-6">
+            <p className="text-white/55 text-[15px] leading-relaxed max-w-sm mb-6">
               Premium flowers and event decorations crafted with love in Ethiopia.
               Where flowers become memories.
             </p>
-            <div className="flex items-center gap-3">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a
-                href="https://wa.me/2519XXXXXXXX"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors"
-                aria-label="WhatsApp"
-              >
-                <MessageCircle className="h-5 w-5" />
-              </a>
+            <div className="flex items-center gap-2">
+              {[
+                { href: "https://instagram.com", icon: Instagram, label: "Instagram" },
+                { href: "https://facebook.com", icon: Facebook, label: "Facebook" },
+                { href: "https://wa.me/2519XXXXXXXX", icon: MessageCircle, label: "WhatsApp" },
+              ].map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="h-11 w-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/16 active:scale-95 transition-all"
+                  aria-label={label}
+                >
+                  <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Links */}
           <div>
-            <h4 className="font-medium text-sm uppercase tracking-wider text-gold mb-4">
+            <h4 className="text-[13px] font-semibold text-white/40 uppercase tracking-wide mb-3">
               Shop
             </h4>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2">
               {footerLinks.shop.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors"
+                    className="text-[15px] text-white/70 hover:text-white transition-colors py-1 inline-block"
                   >
                     {link.label}
                   </Link>
@@ -97,15 +83,15 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-medium text-sm uppercase tracking-wider text-gold mb-4">
+            <h4 className="text-[13px] font-semibold text-white/40 uppercase tracking-wide mb-3">
               Company
             </h4>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-white/70 hover:text-white transition-colors"
+                    className="text-[15px] text-white/70 hover:text-white transition-colors py-1 inline-block"
                   >
                     {link.label}
                   </Link>
@@ -115,22 +101,22 @@ export function Footer() {
           </div>
 
           <div>
-            <h4 className="font-medium text-sm uppercase tracking-wider text-gold mb-4">
+            <h4 className="text-[13px] font-semibold text-white/40 uppercase tracking-wide mb-3">
               Contact
             </h4>
             <ul className="space-y-3">
-              <li className="flex items-start gap-2.5 text-sm text-white/70">
-                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-gold" />
+              <li className="flex items-start gap-2.5 text-[15px] text-white/70">
+                <MapPin className="h-4 w-4 mt-1 shrink-0 text-white/40" strokeWidth={1.75} />
                 <span>Addis Ababa, Ethiopia</span>
               </li>
-              <li className="flex items-center gap-2.5 text-sm text-white/70">
-                <Phone className="h-4 w-4 shrink-0 text-gold" />
+              <li className="flex items-center gap-2.5 text-[15px] text-white/70">
+                <Phone className="h-4 w-4 shrink-0 text-white/40" strokeWidth={1.75} />
                 <a href="tel:+2519XXXXXXXX" className="hover:text-white transition-colors">
                   +251 9XX XXX XXX
                 </a>
               </li>
-              <li className="flex items-center gap-2.5 text-sm text-white/70">
-                <Mail className="h-4 w-4 shrink-0 text-gold" />
+              <li className="flex items-center gap-2.5 text-[15px] text-white/70">
+                <Mail className="h-4 w-4 shrink-0 text-white/40" strokeWidth={1.75} />
                 <a href="mailto:hello@decore.et" className="hover:text-white transition-colors">
                   hello@decore.et
                 </a>
@@ -140,17 +126,16 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/50">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-[12px] text-white/40">
             © {new Date().getFullYear()} Decore. All rights reserved.
           </p>
-          <div className="flex items-center gap-6 text-xs text-white/50">
-            <Link href="/privacy" className="hover:text-white/80 transition-colors">
+          <div className="flex items-center gap-5 text-[12px] text-white/40">
+            <Link href="/privacy" className="hover:text-white/70 transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-white/80 transition-colors">
+            <Link href="/terms" className="hover:text-white/70 transition-colors">
               Terms of Service
             </Link>
           </div>
