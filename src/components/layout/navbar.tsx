@@ -23,17 +23,20 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const { itemCount } = useCart()
   const pathname = usePathname()
-  if (pathname?.startsWith("/admin")) return null
+  const isAdmin = pathname?.startsWith("/admin")
 
   useEffect(() => {
+    if (isAdmin) return
     const handleScroll = () => setScrolled(window.scrollY > 8)
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [isAdmin])
 
   useEffect(() => {
     setIsOpen(false)
   }, [pathname])
+
+  if (isAdmin) return null
 
   return (
     <header
@@ -56,7 +59,8 @@ export function Navbar() {
 
           <nav className="hidden lg:flex items-center gap-0.5">
             {navLinks.map((link) => {
-              const active = pathname === link.href || pathname?.startsWith(link.href + "/")
+              const active =
+                pathname === link.href || pathname?.startsWith(link.href + "/")
               return (
                 <Link
                   key={link.href}
