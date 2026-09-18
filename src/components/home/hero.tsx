@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { ArrowRight, Sparkles } from "lucide-react"
 
 const HeroCanvas = dynamic(
@@ -13,100 +12,104 @@ const HeroCanvas = dynamic(
 
 export function Hero() {
   return (
-    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
-      {/* Soft gradient base */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#f5f5f7] via-[#fbf2f4]/80 to-[#f5e6e8]/40" />
-
-      {/* Real 3D scene (parallax + orbit) */}
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden glass-mesh">
       <HeroCanvas />
 
-      {/* Soft vignette so text stays readable over 3D */}
-      <div
-        className="absolute inset-0 pointer-events-none z-[1]"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 55% at 50% 45%, rgba(245,245,247,0.75) 0%, rgba(245,245,247,0.25) 45%, transparent 70%)",
-        }}
-      />
-
-      {/* Content — above canvas */}
-      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center pt-16 pb-10 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none z-[1]" aria-hidden>
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="pointer-events-auto"
-        >
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-md border border-black/[0.04] px-4 py-1.5 mb-7 text-[13px] font-medium text-deep-burgundy shadow-sm">
-            <Sparkles className="h-3.5 w-3.5 text-gold" />
-            <span>Premium Floral Design Studio</span>
-          </div>
-        </motion.div>
-
-        <motion.h1
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-semibold tracking-tight text-deep-burgundy leading-[1.12] mb-5 drop-shadow-sm"
-          initial={{ opacity: 0, y: 32 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        >
-          Where Flowers
-          <br />
-          <span className="text-gradient">Become Memories</span>
-        </motion.h1>
-
-        <motion.p
-          className="mx-auto max-w-lg text-[15px] sm:text-base text-label-secondary leading-relaxed mb-9"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.22 }}
-        >
-          Beautiful flowers, elegant decorations, and unforgettable event
-          experiences crafted with love in Ethiopia.
-        </motion.p>
-
+          className="absolute top-[15%] left-[10%] h-40 w-40 rounded-full bg-blush/30 blur-3xl"
+          animate={{ y: [0, 20, 0], x: [0, 12, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 pointer-events-auto"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, delay: 0.35 }}
-        >
-          <Link href="/designs">
-            <Button size="lg" className="min-w-[180px] group shadow-md">
-              Explore Our Designs
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
-          <Link href="/booking">
-            <Button size="lg" variant="outline" className="min-w-[180px] bg-white/70 backdrop-blur-sm">
-              Order Decorations
-            </Button>
-          </Link>
-        </motion.div>
-
-        <motion.div
-          className="mt-12 flex flex-wrap items-center justify-center gap-6 sm:gap-8 text-[13px] text-label-secondary"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.9, delay: 0.55 }}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-xl">🇪🇹</span>
-            <span>Made in Ethiopia</span>
-          </div>
-          <div className="hidden sm:block w-px h-3.5 bg-black/10" />
-          <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-label">500+</span>
-            <span>Events Styled</span>
-          </div>
-          <div className="hidden sm:block w-px h-3.5 bg-black/10" />
-          <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-label">4.9★</span>
-            <span>Customer Rating</span>
-          </div>
-        </motion.div>
+          className="absolute bottom-[20%] right-[8%] h-48 w-48 rounded-full bg-gold/20 blur-3xl"
+          animate={{ y: [0, -16, 0], x: [0, -10, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-background to-transparent pointer-events-none z-[1]" />
+      <div className="relative z-10 mx-auto max-w-xl w-full px-4 sm:px-5 pt-20 pb-12 pointer-events-none">
+        <motion.div
+          initial={{ opacity: 0, y: 28, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-strong rounded-[28px] p-6 sm:p-8 text-center pointer-events-auto"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="inline-flex items-center gap-2 glass-chip rounded-full px-3.5 py-1.5 mb-5 text-[12px] font-semibold text-deep-burgundy"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-gold" />
+            Premium Floral Studio
+          </motion.div>
+
+          <motion.h1
+            className="text-[32px] sm:text-[40px] md:text-[44px] font-bold tracking-tight text-label leading-[1.1] mb-3"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.22, duration: 0.7 }}
+          >
+            Where Flowers
+            <br />
+            <span className="text-gradient">Become Memories</span>
+          </motion.h1>
+
+          <motion.p
+            className="text-[15px] text-label-secondary leading-relaxed mb-7 max-w-sm mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35 }}
+          >
+            Elegant florals & event décor crafted in Ethiopia — delivered with care.
+          </motion.p>
+
+          <motion.div
+            className="flex flex-col sm:flex-row items-center justify-center gap-2.5"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+          >
+            <Link
+              href="/designs"
+              className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-primary text-white text-[15px] font-semibold shadow-lg shadow-primary/25 active:scale-[0.97] transition-transform w-full sm:w-auto"
+            >
+              Explore Designs
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/booking"
+              className="inline-flex items-center justify-center h-12 px-6 rounded-full glass text-[15px] font-semibold text-label active:scale-[0.97] transition-transform w-full sm:w-auto"
+            >
+              Book Decorations
+            </Link>
+          </motion.div>
+        </motion.div>
+
+        <motion.div
+          className="mt-5 grid grid-cols-3 gap-2 pointer-events-auto"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55, duration: 0.6 }}
+        >
+          {[
+            { value: "500+", label: "Events" },
+            { value: "4.9★", label: "Rating" },
+            { value: "ET", label: "Ethiopia" },
+          ].map((s) => (
+            <motion.div
+              key={s.label}
+              className="glass rounded-2xl py-3 px-2 text-center"
+              whileHover={{ y: -3, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 400, damping: 24 }}
+            >
+              <p className="text-[16px] font-bold text-label tracking-tight">{s.value}</p>
+              <p className="text-[11px] text-label-secondary mt-0.5">{s.label}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
     </section>
   )
 }
