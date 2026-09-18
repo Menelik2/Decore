@@ -1,10 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Package, Search, ChevronDown, Phone, MapPin } from "lucide-react"
+import { Package, Search, ChevronDown, Phone, MapPin, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { formatPrice, formatDate, cn } from "@/lib/utils"
+import { orderStore } from "@/lib/admin-store"
 
 type StoredOrder = {
   id: string
@@ -47,7 +48,7 @@ export default function AdminOrdersPage() {
   const [search, setSearch] = useState("")
   const [expanded, setExpanded] = useState<string | null>(null)
 
-  const load = () => {
+  useEffect(() => {
     try {
       const raw = localStorage.getItem("decore-orders")
       if (raw) setOrders(JSON.parse(raw))
@@ -55,10 +56,6 @@ export default function AdminOrdersPage() {
     } catch {
       setOrders([])
     }
-  }
-
-  useEffect(() => {
-    load()
   }, [])
 
   const updateStatus = (orderNumber: string, status: string) => {
@@ -67,6 +64,13 @@ export default function AdminOrdersPage() {
     )
     setOrders(next)
     localStorage.setItem("decore-orders", JSON.stringify(next))
+  }
+
+  const removeOrder = (orderNumber: string) => {
+    if (!confirm("Delete this order permanently?")) return
+    orderStore.remove(orderNumber)
+    setOrders((prev) => prev.filter((o) => o.order_number !== orderNumber))
+    setExpanded(null)
   }
 
   const filtered = orders.filter((o) => {
@@ -213,9 +217,7 @@ export default function AdminOrdersPage() {
                     </div>
 
                     <div>
-                      <p className="text-[12px] font-medium text-label-secondary mb-2">
-                        Items
-                      </p>
+                      <p className="text-[12px] font-medium text-label-secondary mb-2">Items</p>
                       <ul className="space-y-1.5 text-[14px]">
                         {order.items?.map((it, i) => (
                           <li key={i} className="flex justify-between gap-2">
@@ -248,6 +250,15 @@ export default function AdminOrdersPage() {
                         ))}
                       </div>
                     </div>
+
+                    <Button
+                      variant="outline"
+                      className="w-full h-11 text-red-600 border-red-200"
+                      onClick={() => removeOrder(order.order_number)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Delete order
+                    </Button>
                   </div>
                 )}
               </div>
