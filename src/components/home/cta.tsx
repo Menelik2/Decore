@@ -7,59 +7,53 @@ import { ArrowRight } from "lucide-react"
 
 export function CTA() {
   return (
-    <section className="section-padding relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-deep-burgundy via-primary to-rose" />
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 text-8xl">🌸</div>
-        <div className="absolute bottom-10 right-10 text-8xl">💐</div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-9xl opacity-50">🌹</div>
-      </div>
+    <section className="relative overflow-hidden py-20 md:py-24">
+      <div className="absolute inset-0 bg-[#1d1d1f]" />
+      <div
+        className="absolute inset-0 opacity-40"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139,41,66,0.55) 0%, transparent 60%)",
+        }}
+      />
 
-      <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
+      <div className="relative z-10 mx-auto max-w-2xl px-5 text-center">
         <motion.h2
-          className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-white mb-4"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-[28px] sm:text-[34px] md:text-[40px] font-bold tracking-tight text-white leading-[1.15] mb-3"
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          Let&apos;s Create Something Beautiful.
+          Let’s create something beautiful
         </motion.h2>
         <motion.p
-          className="text-white/80 text-lg mb-10 max-w-xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
+          className="text-[15px] sm:text-[17px] text-white/55 leading-relaxed mb-9 max-w-md mx-auto"
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.08 }}
         >
-          Whether it&apos;s a single bouquet or a full venue transformation, we&apos;re here to bring your vision to life.
+          From a single bouquet to a full venue — tell us the occasion, we’ll
+          handle the rest.
         </motion.p>
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3"
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.14 }}
         >
           <Link href="/designs">
-            <Button size="xl" variant="secondary" className="min-w-[180px] group">
+            <Button size="lg" className="min-w-[160px] group bg-white text-[#1d1d1f] hover:bg-white/90">
               Explore Designs
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
-          <Link href="/flowers">
-            <Button
-              size="xl"
-              variant="outline"
-              className="min-w-[180px] border-white/40 text-white hover:bg-white hover:text-deep-burgundy"
-            >
-              Order Flowers
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </Button>
           </Link>
           <Link href="/booking">
             <Button
-              size="xl"
+              size="lg"
               variant="outline"
-              className="min-w-[180px] border-white/40 text-white hover:bg-white hover:text-deep-burgundy"
+              className="min-w-[160px] border-white/20 text-white hover:bg-white/10"
             >
               Book Decorations
             </Button>
