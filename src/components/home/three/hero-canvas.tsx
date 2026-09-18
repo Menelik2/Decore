@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useState, useEffect } from "react"
+import { Suspense, useState, useEffect, Component, type ReactNode } from "react"
 import { Canvas } from "@react-three/fiber"
 import { FlowerScene } from "./flower-scene"
 
@@ -57,6 +57,20 @@ function FallbackImages() {
   )
 }
 
+class SceneErrorBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false }
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback
+    return this.props.children
+  }
+}
+
 export function HeroCanvas() {
   const reduced = usePrefersReducedMotion()
   const quality = useQuality()
@@ -69,25 +83,27 @@ export function HeroCanvas() {
   }
 
   return (
-    <div className="absolute inset-0 z-0" style={{ touchAction: "none" }} aria-hidden>
-      <Canvas
-        dpr={quality === "low" ? [1, 1.25] : [1, 1.75]}
-        camera={{ position: [0, 0, 6.4], fov: 40, near: 0.1, far: 40 }}
-        gl={{
-          antialias: quality === "high",
-          alpha: true,
-          powerPreference: "high-performance",
-          stencil: false,
-        }}
-        style={{ background: "transparent" }}
-        onCreated={({ gl }) => {
-          gl.setClearColor(0x000000, 0)
-        }}
-      >
-        <Suspense fallback={null}>
-          <FlowerScene quality={quality} />
-        </Suspense>
-      </Canvas>
+    <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden>
+      <SceneErrorBoundary fallback={<FallbackImages />}>
+        <Canvas
+          dpr={quality === "low" ? [1, 1.25] : [1, 1.75]}
+          camera={{ position: [0, 0, 6.4], fov: 40, near: 0.1, far: 40 }}
+          gl={{
+            antialias: quality === "high",
+            alpha: true,
+            powerPreference: "high-performance",
+            stencil: false,
+          }}
+          style={{ background: "transparent", pointerEvents: "none" }}
+          onCreated={({ gl }) => {
+            gl.setClearColor(0x000000, 0)
+          }}
+        >
+          <Suspense fallback={null}>
+            <FlowerScene quality={quality} />
+          </Suspense>
+        </Canvas>
+      </SceneErrorBoundary>
     </div>
   )
 }
