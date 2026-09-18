@@ -80,13 +80,13 @@ export default function FlowersPage() {
               transition={{ duration: 0.5, delay: Math.min(i * 0.06, 0.35) }}
               className="group"
             >
-              <ImageCard3D tiltMax={16} glare depthShadow className="w-full">
+              <ImageCard3D tiltMax={18} glare depthShadow float className="w-full">
                 <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={p.image}
                     alt={p.name}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.12]"
                     loading="lazy"
                   />
                   <div
