@@ -185,7 +185,6 @@ body {
   }
 }
 
-/* iPhone Clear Glass */
 .glass {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(24px) saturate(180%);
@@ -237,4 +236,18 @@ body {
     0 0 0 0.5px rgba(0, 0, 0, 0.04),
     0 2px 8px rgba(0, 0, 0, 0.04),
     0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+.animate-float-y {
+  animation: floatY 7s ease-in-out infinite;
 }
