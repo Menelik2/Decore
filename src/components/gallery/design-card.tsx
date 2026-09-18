@@ -42,23 +42,44 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
       }}
       className="group relative [perspective:1000px]"
     >
-      <ImageCard3D tiltMax={18} glare depthShadow float className="w-full">
+      <ImageCard3D
+        tiltMax={16}
+        glare
+        depthShadow
+        float
+        translateIdle
+        phase={(index % 7) / 7}
+        className="w-full"
+      >
         <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={design.images[0]?.url}
-            alt={design.images[0]?.alt || design.title}
-            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.12]"
-            loading="lazy"
-          />
+          <motion.div
+            className="absolute inset-0"
+            animate={{
+              x: [0, 8, 0, -6, 0],
+              y: [0, -6, 0, 5, 0],
+              scale: [1.08, 1.12, 1.08],
+            }}
+            transition={{
+              duration: 14 + (index % 5),
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: index * 0.4,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={design.images[0]?.url}
+              alt={design.images[0]?.alt || design.title}
+              className="h-full w-full object-cover scale-110 transition-transform duration-700 ease-out group-hover:scale-[1.18]"
+              loading="lazy"
+            />
+          </motion.div>
 
-          {/* Diagonal light streak */}
           <div
             className="pointer-events-none absolute -inset-full bg-gradient-to-br from-white/0 via-white/25 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rotate-12 translate-x-[-20%]"
             aria-hidden
           />
 
-          {/* Badges — float in 3D space */}
           <div
             className="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10"
             style={{ transform: "translateZ(48px)" }}
@@ -81,7 +102,6 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
             )}
           </div>
 
-          {/* Favorite */}
           <button
             className="absolute top-3 right-3 h-10 w-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110 shadow-lg z-10"
             aria-label="Add to favorites"
@@ -90,10 +110,8 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
             <Heart className="h-4 w-4 text-primary" />
           </button>
 
-          {/* Hover overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
 
-          {/* Color dots preview */}
           <div
             className="absolute bottom-16 left-4 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10"
             style={{ transform: "translateZ(40px)" }}
@@ -107,7 +125,6 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
             ))}
           </div>
 
-          {/* Action buttons */}
           <div
             className="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-400 translate-y-4 group-hover:translate-y-0 z-10"
             style={{ transform: "translateZ(56px)" }}
@@ -134,7 +151,6 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
         </div>
       </ImageCard3D>
 
-      {/* Meta under card */}
       <div className="mt-4 px-0.5">
         <p className="text-[11px] font-medium text-primary uppercase tracking-wider mb-1">
           {design.category}
