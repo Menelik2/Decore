@@ -15,17 +15,14 @@ export default function DesignsPage() {
   const filtered = useMemo(() => {
     let result = [...designs]
 
-    // Category
     if (category !== "all") {
       result = result.filter((d) => d.categorySlug === category)
     }
 
-    // Featured only
     if (showFeaturedOnly) {
       result = result.filter((d) => d.isFeatured)
     }
 
-    // Search
     if (search.trim()) {
       const q = search.toLowerCase()
       result = result.filter(
@@ -39,7 +36,6 @@ export default function DesignsPage() {
       )
     }
 
-    // Sort
     switch (sort) {
       case "newest":
         result = result.filter((d) => d.isNew).concat(result.filter((d) => !d.isNew))
@@ -68,23 +64,32 @@ export default function DesignsPage() {
   }, [search, category, sort, showFeaturedOnly])
 
   return (
-    <div className="min-h-screen pt-24 pb-20">
+    <div className="min-h-screen pt-24 pb-24 relative overflow-hidden">
+      {/* Soft luxury background atmosphere */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10"
+        aria-hidden
+      >
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[40vh] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-[40vw] h-[30vh] rounded-full bg-gold/10 blur-3xl" />
+      </div>
+
       {/* Header */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-12">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="text-sm font-medium text-primary uppercase tracking-wider mb-2">
+          <p className="text-sm font-medium text-primary uppercase tracking-[0.2em] mb-3">
             Portfolio
           </p>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-semibold text-deep-burgundy mb-3">
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-semibold text-deep-burgundy mb-4 leading-tight">
             Design Gallery
           </h1>
-          <p className="text-muted-foreground max-w-xl">
-            Explore our collection of premium floral designs and event decorations.
-            Filter by occasion, style, or search for exactly what you need.
+          <p className="text-muted-foreground max-w-xl text-base sm:text-lg leading-relaxed">
+            Explore premium floral designs and event decorations — tilt, hover,
+            and discover the details in three dimensions.
           </p>
         </motion.div>
       </div>
@@ -124,11 +129,14 @@ export default function DesignsPage() {
             </button>
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-7">
+          <motion.div
+            layout
+            className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 md:gap-8 lg:gap-9"
+          >
             {filtered.map((design, i) => (
               <DesignCard key={design.id} design={design} index={i} />
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>
