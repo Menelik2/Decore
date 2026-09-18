@@ -21,6 +21,7 @@ type CardSpec = {
   speed: number
   phase: number
   tilt: number
+  orbit: number
 }
 
 function PhotoCard({
@@ -29,7 +30,8 @@ function PhotoCard({
   scale = 1,
   speed = 1,
   phase = 0,
-  tilt = 0.12,
+  tilt = 0.14,
+  orbit = 0.35,
 }: CardSpec) {
   const group = useRef<THREE.Group>(null)
   const base = useMemo(() => new THREE.Vector3(...position), [position])
@@ -37,23 +39,26 @@ function PhotoCard({
   useFrame((state) => {
     if (!group.current) return
     const t = state.clock.elapsedTime * speed + phase
-    group.current.position.x = base.x + Math.sin(t * 0.55) * 0.22
-    group.current.position.y = base.y + Math.cos(t * 0.4) * 0.18
-    group.current.position.z = base.z + Math.sin(t * 0.3) * 0.1
-    group.current.rotation.y = Math.sin(t * 0.35) * tilt
-    group.current.rotation.x = Math.cos(t * 0.28) * tilt * 0.6
-    group.current.rotation.z = Math.sin(t * 0.2) * 0.04
+    const ox = Math.sin(t * 0.65) * orbit
+    const oy = Math.cos(t * 0.48) * (orbit * 0.75)
+    const oz = Math.sin(t * 0.4 + phase) * (orbit * 0.55)
+    group.current.position.x = base.x + ox
+    group.current.position.y = base.y + oy
+    group.current.position.z = base.z + oz
+    group.current.rotation.y = Math.sin(t * 0.4) * tilt + ox * 0.15
+    group.current.rotation.x = Math.cos(t * 0.32) * tilt * 0.7 - oy * 0.08
+    group.current.rotation.z = Math.sin(t * 0.22) * 0.06
   })
 
-  const w = 1.1
-  const h = 1.35
+  const w = 1.15
+  const h = 1.4
 
   return (
-    <Float speed={1.1} rotationIntensity={0.15} floatIntensity={0.25}>
+    <Float speed={1.4} rotationIntensity={0.2} floatIntensity={0.35}>
       <group ref={group} position={position} scale={scale}>
-        <mesh position={[0.04, -0.06, -0.04]} scale={[1.02, 1.02, 1]}>
+        <mesh position={[0.05, -0.07, -0.05]} scale={[1.03, 1.03, 1]}>
           <planeGeometry args={[w, h]} />
-          <meshBasicMaterial color="#000000" transparent opacity={0.12} />
+          <meshBasicMaterial color="#000000" transparent opacity={0.14} />
         </mesh>
         <mesh>
           <planeGeometry args={[w, h]} />
@@ -82,31 +87,39 @@ function SoftGlowOrb({
   useFrame((state) => {
     if (!ref.current) return
     const t = state.clock.elapsedTime * speed
-    ref.current.position.x = base.x + Math.sin(t * 0.6 + phase) * 0.3
-    ref.current.position.y = base.y + Math.cos(t * 0.5 + phase) * 0.25
+    ref.current.position.x = base.x + Math.sin(t * 0.55 + phase) * 0.55
+    ref.current.position.y = base.y + Math.cos(t * 0.45 + phase) * 0.4
+    ref.current.position.z = base.z + Math.sin(t * 0.35 + phase) * 0.35
   })
 
   return (
     <mesh ref={ref} scale={scale}>
-      <sphereGeometry args={[0.45, 20, 20]} />
-      <meshBasicMaterial color={color} transparent opacity={0.2} depthWrite={false} />
+      <sphereGeometry args={[0.5, 20, 20]} />
+      <meshBasicMaterial color={color} transparent opacity={0.22} depthWrite={false} />
     </mesh>
   )
 }
 
 function ParallaxRig({ children }: { children: React.ReactNode }) {
   const group = useRef<THREE.Group>(null)
-  const { pointer } = useThree()
-  const target = useRef({ x: 0, y: 0 })
+  const { pointer, camera } = useThree()
+  const target = useRef({ x: 0, y: 0, z: 0 })
+  const camBase = useMemo(() => camera.position.clone(), [camera])
 
-  useFrame(() => {
+  useFrame((state) => {
     if (!group.current) return
-    target.current.x += (pointer.x * 0.25 - target.current.x) * 0.04
-    target.current.y += (pointer.y * 0.18 - target.current.y) * 0.04
-    group.current.rotation.y = target.current.x * 0.28
-    group.current.rotation.x = -target.current.y * 0.18
-    group.current.position.x = target.current.x * 0.2
-    group.current.position.y = target.current.y * 0.1
+    const t = state.clock.elapsedTime
+    target.current.x += (pointer.x * 0.55 - target.current.x) * 0.05
+    target.current.y += (pointer.y * 0.35 - target.current.y) * 0.05
+    const autoX = Math.sin(t * 0.18) * 0.12
+    const autoY = Math.cos(t * 0.14) * 0.08
+    group.current.position.x = target.current.x * 0.45 + autoX
+    group.current.position.y = target.current.y * 0.28 + autoY
+    group.current.position.z = Math.sin(t * 0.2) * 0.08
+    group.current.rotation.y = target.current.x * 0.32 + Math.sin(t * 0.15) * 0.04
+    group.current.rotation.x = -target.current.y * 0.22
+    camera.position.z = camBase.z + Math.sin(t * 0.25) * 0.15
+    camera.lookAt(0, 0, 0)
   })
 
   return <group ref={group}>{children}</group>
@@ -124,12 +137,12 @@ function SceneContent({ quality }: { quality: "high" | "low" }) {
 
   const cards = useMemo((): CardSpec[] => {
     const layout: Omit<CardSpec, "texture">[] = [
-      { position: [-2.55, 0.85, -0.4], scale: 1.05, speed: 0.85, phase: 0.2, tilt: 0.14 },
-      { position: [-2.35, -0.95, -0.9], scale: 0.78, speed: 1.05, phase: 1.4, tilt: 0.12 },
-      { position: [2.5, 0.55, -0.5], scale: 1.0, speed: 0.9, phase: 0.8, tilt: 0.13 },
-      { position: [2.7, -1.05, -1.0], scale: 0.72, speed: 1.1, phase: 2.1, tilt: 0.11 },
-      { position: [-1.6, 1.55, -1.8], scale: 0.55, speed: 0.7, phase: 0.5, tilt: 0.1 },
-      { position: [1.5, 1.65, -2.0], scale: 0.5, speed: 0.75, phase: 1.8, tilt: 0.1 },
+      { position: [-2.6, 0.9, -0.3], scale: 1.08, speed: 0.9, phase: 0.2, tilt: 0.16, orbit: 0.42 },
+      { position: [-2.4, -1.0, -0.85], scale: 0.82, speed: 1.1, phase: 1.4, tilt: 0.14, orbit: 0.38 },
+      { position: [2.55, 0.6, -0.45], scale: 1.02, speed: 0.95, phase: 0.8, tilt: 0.15, orbit: 0.4 },
+      { position: [2.75, -1.1, -0.95], scale: 0.74, speed: 1.15, phase: 2.1, tilt: 0.13, orbit: 0.36 },
+      { position: [-1.55, 1.6, -1.7], scale: 0.58, speed: 0.75, phase: 0.5, tilt: 0.12, orbit: 0.32 },
+      { position: [1.55, 1.7, -1.9], scale: 0.52, speed: 0.8, phase: 1.8, tilt: 0.12, orbit: 0.3 },
     ]
     const specs = quality === "low" ? layout.slice(0, 4) : layout
     return specs.map((s, i) => ({
@@ -143,9 +156,9 @@ function SceneContent({ quality }: { quality: "high" | "low" }) {
       {cards.map((c, i) => (
         <PhotoCard key={i} {...c} />
       ))}
-      <SoftGlowOrb position={[-0.8, -1.4, -2.2]} color="#D4A5A5" scale={1.4} speed={0.5} />
-      <SoftGlowOrb position={[1.2, 1.8, -2.5]} color="#C9A86C" scale={1.1} speed={0.6} />
-      <SoftGlowOrb position={[0, -0.2, -3]} color="#F5E6E8" scale={1.8} speed={0.35} />
+      <SoftGlowOrb position={[-0.9, -1.5, -2.2]} color="#D4A5A5" scale={1.5} speed={0.55} />
+      <SoftGlowOrb position={[1.3, 1.9, -2.4]} color="#C9A86C" scale={1.2} speed={0.65} />
+      <SoftGlowOrb position={[0, -0.15, -2.9]} color="#F5E6E8" scale={1.9} speed={0.4} />
     </ParallaxRig>
   )
 }
