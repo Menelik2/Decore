@@ -14,28 +14,31 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 type Occasion = {
-  name: string
+  nameKey: string
+  blurbKey: string
   href: string
   icon: LucideIcon
   tint: string
   iconColor: string
-  blurb: string
 }
 
-const occasions: Occasion[] = [
-  { name: "Wedding", href: "/designs?category=weddings", icon: Gem, tint: "from-rose-100/80 to-white/40", iconColor: "text-[#8B2942]", blurb: "Aisles & arches" },
-  { name: "Birthday", href: "/designs?category=birthdays", icon: Cake, tint: "from-amber-100/80 to-white/40", iconColor: "text-[#C9A86C]", blurb: "Tables & setups" },
-  { name: "Engagement", href: "/designs?category=engagement", icon: Heart, tint: "from-pink-100/80 to-white/40", iconColor: "text-[#c23a5a]", blurb: "Intimate looks" },
-  { name: "Graduation", href: "/designs?category=graduation", icon: GraduationCap, tint: "from-emerald-100/70 to-white/40", iconColor: "text-[#3d6b4f]", blurb: "Proud moments" },
-  { name: "Baby Shower", href: "/designs?category=baby-shower", icon: Baby, tint: "from-sky-100/80 to-white/40", iconColor: "text-[#5a7a9a]", blurb: "Soft spaces" },
-  { name: "Corporate", href: "/designs?category=corporate", icon: Building2, tint: "from-slate-100/80 to-white/40", iconColor: "text-[#4a4a50]", blurb: "Events & lobbies" },
-  { name: "Traditional", href: "/designs?category=ethiopian-traditional", icon: Sparkles, tint: "from-orange-100/70 to-white/40", iconColor: "text-[#8B5A2B]", blurb: "Ethiopian style" },
-  { name: "Gift", href: "/flowers", icon: Gift, tint: "from-violet-100/70 to-white/40", iconColor: "text-[#6b4a7a]", blurb: "Same-day florals" },
+const occasionDefs: Occasion[] = [
+  { nameKey: "wedding", blurbKey: "weddingBlurb", href: "/designs?category=weddings", icon: Gem, tint: "from-rose-100/80 to-white/40", iconColor: "text-[#8B2942]" },
+  { nameKey: "birthday", blurbKey: "birthdayBlurb", href: "/designs?category=birthdays", icon: Cake, tint: "from-amber-100/80 to-white/40", iconColor: "text-[#C9A86C]" },
+  { nameKey: "engagement", blurbKey: "engagementBlurb", href: "/designs?category=engagement", icon: Heart, tint: "from-pink-100/80 to-white/40", iconColor: "text-[#c23a5a]" },
+  { nameKey: "graduation", blurbKey: "graduationBlurb", href: "/designs?category=graduation", icon: GraduationCap, tint: "from-emerald-100/70 to-white/40", iconColor: "text-[#3d6b4f]" },
+  { nameKey: "babyShower", blurbKey: "babyShowerBlurb", href: "/designs?category=baby-shower", icon: Baby, tint: "from-sky-100/80 to-white/40", iconColor: "text-[#5a7a9a]" },
+  { nameKey: "corporate", blurbKey: "corporateBlurb", href: "/designs?category=corporate", icon: Building2, tint: "from-slate-100/80 to-white/40", iconColor: "text-[#4a4a50]" },
+  { nameKey: "traditional", blurbKey: "traditionalBlurb", href: "/designs?category=ethiopian-traditional", icon: Sparkles, tint: "from-orange-100/70 to-white/40", iconColor: "text-[#8B5A2B]" },
+  { nameKey: "gift", blurbKey: "giftBlurb", href: "/flowers", icon: Gift, tint: "from-violet-100/70 to-white/40", iconColor: "text-[#6b4a7a]" },
 ]
 
 export function Occasions() {
+  const t = useTranslations()
+
   return (
     <section className="relative py-16 md:py-20 overflow-hidden">
       <div className="absolute inset-0 glass-mesh opacity-60 pointer-events-none" />
@@ -47,22 +50,24 @@ export function Occasions() {
           viewport={{ once: true }}
         >
           <p className="text-[13px] font-semibold text-primary tracking-wide mb-2">
-            Celebrate
+            {t("Occasions.label")}
           </p>
           <h2 className="text-[28px] md:text-[34px] font-bold tracking-tight text-label leading-[1.15]">
-            What are you celebrating?
+            {t("Occasions.title")}
           </h2>
           <p className="mt-2.5 text-[15px] text-label-secondary">
-            Pick an occasion — we’ll match florals and décor.
+            {t("Occasions.subtitle")}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {occasions.map((item, index) => {
+          {occasionDefs.map((item, index) => {
             const Icon = item.icon
+            const name = t(`Occasions.${item.nameKey}`)
+            const blurb = t(`Occasions.${item.blurbKey}`)
             return (
               <motion.div
-                key={item.name}
+                key={item.nameKey}
                 initial={{ opacity: 0, y: 20, rotateX: 8 }}
                 whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
                 viewport={{ once: true, margin: "-20px" }}
@@ -90,10 +95,10 @@ export function Occasions() {
                   </div>
                   <div className="mt-4 w-full">
                     <p className="text-[15px] sm:text-[16px] font-semibold tracking-tight text-label">
-                      {item.name}
+                      {name}
                     </p>
                     <p className="mt-0.5 text-[12px] text-label-secondary">
-                      {item.blurb}
+                      {blurb}
                     </p>
                   </div>
                 </Link>
