@@ -6,41 +6,7 @@ import { ChevronDown } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-
-const faqs = [
-  {
-    q: "Which cities do you deliver to?",
-    a: "We deliver across Addis Ababa and major cities including Bahir Dar, Gondar, Hawassa, Mekelle, Dire Dawa, Adama, and more. Delivery fees vary by location; Addis Ababa orders over 3,000 ETB often qualify for free delivery.",
-  },
-  {
-    q: "How far in advance should I book event decorations?",
-    a: "For weddings and large events we recommend booking at least 2–4 weeks ahead. Smaller arrangements can often be arranged with a few days’ notice, depending on the season and flower availability.",
-  },
-  {
-    q: "Can I customize a design from the gallery?",
-    a: "Yes. Use “Customize Similar” on any design page, or our Custom Design builder to choose occasion, flowers, colors, size, and add-ons. We’ll confirm details and pricing with you.",
-  },
-  {
-    q: "What payment methods do you accept?",
-    a: "Cash on delivery and bank transfer are available now. Telebirr and CBE Birr can be enabled by the business. We’ll confirm payment details when your order is accepted.",
-  },
-  {
-    q: "Do you offer traditional Ethiopian ceremony decorations?",
-    a: "Absolutely. We specialize in Habesha and traditional ceremony styling — stage, entrance, table, and full venue — with respect for cultural details and color preferences.",
-  },
-  {
-    q: "How do I track my order?",
-    a: "After checkout you’ll receive an order number. Sign in to your account and open My Orders to see status updates: Pending, Confirmed, Preparing, Ready, Out for Delivery, and Completed.",
-  },
-  {
-    q: "Can I include a gift message?",
-    a: "Yes. Add a note at checkout or when building a custom design. Greeting cards and custom message cards are also available as add-ons.",
-  },
-  {
-    q: "What if I need to change or cancel an order?",
-    a: "Contact us as soon as possible by phone or WhatsApp. Changes and cancellations depend on how far preparation has progressed; we’ll always try to accommodate you.",
-  },
-]
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 function FaqItem({
   q,
@@ -87,20 +53,32 @@ function FaqItem({
 }
 
 export default function FaqPage() {
+  const t = useTranslations()
   const [openIndex, setOpenIndex] = useState<number | null>(0)
+
+  const faqs = [
+    { q: t("FAQ.q1"), a: t("FAQ.a1") },
+    { q: t("FAQ.q2"), a: t("FAQ.a2") },
+    { q: t("FAQ.q3"), a: t("FAQ.a3") },
+    { q: t("FAQ.q4"), a: t("FAQ.a4") },
+    { q: t("FAQ.q5"), a: t("FAQ.a5") },
+    { q: t("FAQ.q6"), a: t("FAQ.a6") },
+    { q: t("FAQ.q7"), a: t("FAQ.a7") },
+    { q: t("FAQ.q8"), a: t("FAQ.a8") },
+  ]
 
   return (
     <div className="min-h-screen pt-24 pb-20">
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <p className="text-sm font-medium text-primary uppercase tracking-wider mb-2">
-            Help
+            {t("FAQ.label")}
           </p>
           <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-deep-burgundy mb-3">
-            Frequently Asked Questions
+            {t("FAQ.title")}
           </h1>
           <p className="text-muted-foreground text-sm">
-            Quick answers about orders, delivery, and decorations
+            {t("FAQ.subtitle")}
           </p>
         </div>
 
@@ -117,12 +95,12 @@ export default function FaqPage() {
         </div>
 
         <div className="mt-12 text-center rounded-2xl border border-border bg-white p-8">
-          <p className="font-medium text-foreground mb-2">Still have questions?</p>
+          <p className="font-medium text-foreground mb-2">{t("FAQ.stillQuestions")}</p>
           <p className="text-sm text-muted-foreground mb-5">
-            We’re happy to help by phone, WhatsApp, or email.
+            {t("FAQ.stillHint")}
           </p>
           <Link href="/contact">
-            <Button>Contact Us</Button>
+            <Button>{t("FAQ.contactUs")}</Button>
           </Link>
         </div>
       </div>
