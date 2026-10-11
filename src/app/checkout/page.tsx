@@ -20,33 +20,14 @@ import { Label } from "@/components/ui/label"
 import { useCart } from "@/lib/cart-context"
 import { formatPrice, cn } from "@/lib/utils"
 import { ETHIOPIAN_CITIES } from "@/types"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
-const PAYMENT_METHODS = [
-  {
-    id: "cod",
-    name: "Cash on Delivery",
-    desc: "Pay when you receive your order",
-    enabled: true,
-  },
-  {
-    id: "bank_transfer",
-    name: "Bank Transfer",
-    desc: "CBE / other bank transfer — details after order",
-    enabled: true,
-  },
-  {
-    id: "telebirr",
-    name: "Telebirr",
-    desc: "Mobile money (coming soon)",
-    enabled: false,
-  },
-  {
-    id: "cbe_birr",
-    name: "CBE Birr",
-    desc: "Commercial Bank of Ethiopia (coming soon)",
-    enabled: false,
-  },
-]
+const PAYMENT_METHOD_IDS = [
+  { id: "cod", enabled: true },
+  { id: "bank_transfer", enabled: true },
+  { id: "telebirr", enabled: false },
+  { id: "cbe_birr", enabled: false },
+] as const
 
 const DELIVERY_FEES: Record<string, number> = {
   "Addis Ababa": 150,
@@ -62,6 +43,7 @@ const DELIVERY_FEES: Record<string, number> = {
 }
 
 export default function CheckoutPage() {
+  const t = useTranslations()
   const { items, subtotal, clearCart, isHydrated } = useCart()
 
   const [name, setName] = useState("")
@@ -77,6 +59,13 @@ export default function CheckoutPage() {
   const [placed, setPlaced] = useState(false)
   const [orderNumber, setOrderNumber] = useState("")
 
+  const paymentLabels: Record<string, { name: string; desc: string }> = {
+    cod: { name: t("Checkout.cod"), desc: t("Checkout.codDesc") },
+    bank_transfer: { name: t("Checkout.bankTransfer"), desc: t("Checkout.bankTransferDesc") },
+    telebirr: { name: t("Checkout.telebirr"), desc: t("Checkout.telebirrDesc") },
+    cbe_birr: { name: t("Checkout.cbeBirr"), desc: t("Checkout.cbeBirrDesc") },
+  }
+
   const baseFee = DELIVERY_FEES[city] ?? 500
   const freeThreshold = city === "Addis Ababa" ? 3000 : 5000
   const deliveryFee = subtotal >= freeThreshold ? 0 : baseFee
@@ -85,7 +74,7 @@ export default function CheckoutPage() {
   if (!isHydrated) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center pt-24">
-        <p className="text-muted-foreground animate-pulse">Loading...</p>
+        <p className="text-muted-foreground animate-pulse">{t("Common.loading")}</p>
       </div>
     )
   }
@@ -94,11 +83,11 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 pt-24">
         <h1 className="font-serif text-2xl font-semibold text-deep-burgundy mb-2">
-          Nothing to checkout
+          {t("Checkout.emptyTitle")}
         </h1>
-        <p className="text-muted-foreground mb-6">Your cart is empty.</p>
+        <p className="text-muted-foreground mb-6">{t("Checkout.emptyHint")}</p>
         <Link href="/designs">
-          <Button>Browse Designs</Button>
+          <Button>{t("Cart.browseDesigns")}</Button>
         </Link>
       </div>
     )
@@ -114,23 +103,23 @@ export default function CheckoutPage() {
         >
           <div className="text-6xl mb-6">🌸</div>
           <h1 className="font-serif text-3xl font-semibold text-deep-burgundy mb-2">
-            Order Placed
+            {t("Checkout.placedTitle")}
           </h1>
           <p className="text-muted-foreground mb-1">
-            Thank you, {name}! Your order has been received.
+            {t("Checkout.placedThanks")} {name}! {t("Checkout.placedReceived")}
           </p>
           <p className="text-lg font-medium text-foreground mb-2">
-            Order #{orderNumber}
+            {t("Checkout.orderNumber")} #{orderNumber}
           </p>
           <p className="text-sm text-muted-foreground mb-8">
-            We'll confirm on {phone}. Total: {formatPrice(total)}
+            {t("Checkout.confirmOn")} {phone}. {t("Cart.total")}: {formatPrice(total)}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href={`/orders/${orderNumber}`}>
-              <Button>View Order</Button>
+              <Button>{t("Checkout.viewOrder")}</Button>
             </Link>
             <Link href="/designs">
-              <Button variant="outline">Continue Shopping</Button>
+              <Button variant="outline">{t("Cart.continueShopping")}</Button>
             </Link>
           </div>
         </motion.div>
@@ -148,13 +137,8 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async () => {
     if (!canSubmit) return
     setLoading(true)
-
-    // Simulate order creation — replace with Supabase insert when connected
     await new Promise((r) => setTimeout(r, 1000))
-
     const num = `DEC-${Date.now().toString(36).toUpperCase()}`
-    
-    // Persist order locally for demo tracking
     try {
       const orders = JSON.parse(localStorage.getItem("decore-orders") || "[]")
       orders.unshift({
@@ -188,7 +172,6 @@ export default function CheckoutPage() {
     } catch {
       // ignore
     }
-
     clearCart()
     setOrderNumber(num)
     setPlaced(true)
@@ -203,34 +186,32 @@ export default function CheckoutPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to cart
+          {t("Checkout.backToCart")}
         </Link>
 
         <h1 className="font-serif text-3xl font-semibold text-deep-burgundy mb-8">
-          Checkout
+          {t("Checkout.title")}
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Form */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Contact */}
             <section className="rounded-2xl border border-border bg-white p-6 space-y-4">
               <h2 className="font-medium text-foreground flex items-center gap-2">
                 <User className="h-4 w-4 text-primary" />
-                Contact details
+                {t("Checkout.contactDetails")}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2 sm:col-span-2">
-                  <Label htmlFor="name">Full name *</Label>
+                  <Label htmlFor="name">{t("Auth.fullName")} *</Label>
                   <Input
                     id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Your full name"
+                    placeholder={t("Auth.fullName")}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone *</Label>
+                  <Label htmlFor="phone">{t("Auth.phone")} *</Label>
                   <div className="relative">
                     <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -244,12 +225,11 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t("Auth.email")}</Label>
                   <div className="relative">
                     <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                      id="email"
-                      type="email"
+                      id="email"\Rightarrow                      type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
@@ -260,25 +240,24 @@ export default function CheckoutPage() {
               </div>
             </section>
 
-            {/* Delivery */}
             <section className="rounded-2xl border border-border bg-white p-6 space-y-4">
               <h2 className="font-medium text-foreground flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
-                Delivery
+                {t("Checkout.delivery")}
               </h2>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="address">Address *</Label>
+                  <Label htmlFor="address">{t("Checkout.address")} *</Label>
                   <Input
                     id="address"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Street, building, landmark..."
+                    placeholder={t("Checkout.addressPlaceholder")}
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="city">City *</Label>
+                    <Label htmlFor="city">{t("Checkout.city")} *</Label>
                     <select
                       id="city"
                       value={city}
@@ -293,7 +272,7 @@ export default function CheckoutPage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="date">Preferred delivery date</Label>
+                    <Label htmlFor="date">{t("Checkout.preferredDate")}</Label>
                     <div className="relative">
                       <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                       <Input
@@ -308,7 +287,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="time">Preferred time</Label>
+                  <Label htmlFor="time">{t("Checkout.preferredTime")}</Label>
                   <Input
                     id="time"
                     type="time"
@@ -317,63 +296,64 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="notes">Order notes</Label>
+                  <Label htmlFor="notes">{t("Checkout.notes")}</Label>
                   <Textarea
                     id="notes"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Gift message, gate code, special requests..."
+                    placeholder={t("Checkout.notesPlaceholder")}
                     rows={3}
                   />
                 </div>
               </div>
             </section>
 
-            {/* Payment */}
             <section className="rounded-2xl border border-border bg-white p-6 space-y-4">
-              <h2 className="font-medium text-foreground">Payment method</h2>
+              <h2 className="font-medium text-foreground">{t("Checkout.paymentMethod")}</h2>
               <div className="space-y-2">
-                {PAYMENT_METHODS.map((m) => (
-                  <button
-                    key={m.id}
-                    type="button"
-                    disabled={!m.enabled}
-                    onClick={() => m.enabled && setPayment(m.id)}
-                    className={cn(
-                      "w-full flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all",
-                      !m.enabled && "opacity-50 cursor-not-allowed",
-                      payment === m.id && m.enabled
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/40"
-                    )}
-                  >
-                    <div
+                {PAYMENT_METHOD_IDS.map((m) => {
+                  const labels = paymentLabels[m.id]
+                  return (
+                    <button
+                      key={m.id}
+                      type="button"
+                      disabled={!m.enabled}
+                      onClick={() => m.enabled && setPayment(m.id)}
                       className={cn(
-                        "h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0",
+                        "w-full flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all",
+                        !m.enabled && "opacity-50 cursor-not-allowed",
                         payment === m.id && m.enabled
-                          ? "border-primary bg-primary"
-                          : "border-border"
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/40"
                       )}
                     >
-                      {payment === m.id && m.enabled && (
-                        <Check className="h-3 w-3 text-white" />
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">{m.name}</p>
-                      <p className="text-xs text-muted-foreground">{m.desc}</p>
-                    </div>
-                  </button>
-                ))}
+                      <div
+                        className={cn(
+                          "h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0",
+                          payment === m.id && m.enabled
+                            ? "border-primary bg-primary"
+                            : "border-border"
+                        )}
+                      >
+                        {payment === m.id && m.enabled && (
+                          <Check className="h-3 w-3 text-white" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{labels.name}</p>
+                        <p className="text-xs text-muted-foreground">{labels.desc}</p>
+                      </div>
+                    </button>
+                  )
+                })}
               </div>
             </section>
           </div>
 
-          {/* Summary */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 rounded-2xl border border-border bg-white p-6 space-y-4">
               <h2 className="font-serif text-xl font-semibold text-deep-burgundy">
-                Order Summary
+                {t("Cart.summary")}
               </h2>
 
               <ul className="space-y-3 max-h-48 overflow-y-auto">
@@ -391,21 +371,23 @@ export default function CheckoutPage() {
 
               <div className="space-y-2 text-sm pt-3 border-t border-border">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="text-muted-foreground">{t("Cart.subtotal")}</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Delivery ({city})</span>
+                  <span className="text-muted-foreground">
+                    {t("Cart.delivery")} ({city})
+                  </span>
                   <span>
                     {deliveryFee === 0 ? (
-                      <span className="text-soft-green">Free</span>
+                      <span className="text-soft-green">{t("Cart.free")}</span>
                     ) : (
                       formatPrice(deliveryFee)
                     )}
                   </span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-border">
-                  <span className="font-medium">Total</span>
+                  <span className="font-medium">{t("Cart.total")}</span>
                   <span className="text-xl font-semibold text-primary">
                     {formatPrice(total)}
                   </span>
@@ -421,15 +403,15 @@ export default function CheckoutPage() {
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Placing order...
+                    {t("Checkout.placing")}
                   </>
                 ) : (
-                  `Place Order · ${formatPrice(total)}`
+                  `${t("Checkout.placeOrder")} · ${formatPrice(total)}`
                 )}
               </Button>
 
               <p className="text-xs text-muted-foreground text-center">
-                By placing this order you agree to our terms. We'll confirm by phone.
+                {t("Checkout.termsNote")}
               </p>
             </div>
           </div>
