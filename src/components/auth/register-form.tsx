@@ -12,8 +12,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { registerSchema, type RegisterInput } from "@/lib/auth-schema"
 import { createClient } from "@/lib/supabase/client"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 export function RegisterForm() {
+  const t = useTranslations()
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -63,7 +65,7 @@ export function RegisterForm() {
 
       setSuccess(true)
     } catch {
-      setServerError("Something went wrong. Please try again.")
+      setServerError(t("Validation.somethingWrong"))
     } finally {
       setLoading(false)
     }
@@ -78,13 +80,13 @@ export function RegisterForm() {
       >
         <div className="text-5xl mb-4">🌸</div>
         <h2 className="font-serif text-2xl font-semibold text-deep-burgundy mb-2">
-          Welcome to Decore
+          {t("Auth.welcomeBack").includes("back") ? "Welcome to ዲኮር" : "ወደ ዲኮር እንኳን ደህና መጡ"}
         </h2>
         <p className="text-muted-foreground mb-6 text-sm">
-          Your account has been created. Check your email to confirm, then sign in.
+          {t("Auth.sideSubtitle")}
         </p>
         <Button onClick={() => router.push("/login")} className="w-full" size="lg">
-          Go to Sign In
+          {t("Auth.signIn")}
         </Button>
       </motion.div>
     )
@@ -105,12 +107,12 @@ export function RegisterForm() {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="fullName">Full Name</Label>
+        <Label htmlFor="fullName">{t("Auth.fullName")}</Label>
         <div className="relative">
           <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="fullName"
-            placeholder="Your full name"
+            placeholder={t("Auth.fullName")}
             className="pl-10"
             autoComplete="name"
             {...register("fullName")}
@@ -122,13 +124,13 @@ export function RegisterForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("Auth.email")}</Label>
         <div className="relative">
           <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={t("Auth.emailPlaceholder")}
             className="pl-10"
             autoComplete="email"
             {...register("email")}
@@ -140,13 +142,13 @@ export function RegisterForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="phone">Phone Number</Label>
+        <Label htmlFor="phone">{t("Auth.phone")}</Label>
         <div className="relative">
           <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="phone"
             type="tel"
-            placeholder="+251 9XX XXX XXX"
+            placeholder={t("Auth.phonePlaceholder")}
             className="pl-10"
             autoComplete="tel"
             {...register("phone")}
@@ -158,13 +160,13 @@ export function RegisterForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password">{t("Auth.password")}</Label>
         <div className="relative">
           <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
-            placeholder="At least 6 characters"
+            placeholder="••••••••"
             className="pl-10 pr-10"
             autoComplete="new-password"
             {...register("password")}
@@ -173,7 +175,7 @@ export function RegisterForm() {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? t("Auth.hidePassword") : t("Auth.showPassword")}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
@@ -184,13 +186,13 @@ export function RegisterForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
+        <Label htmlFor="confirmPassword">{t("Auth.confirmPassword")}</Label>
         <div className="relative">
           <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="confirmPassword"
             type={showPassword ? "text" : "password"}
-            placeholder="Repeat password"
+            placeholder="••••••••"
             className="pl-10"
             autoComplete="new-password"
             {...register("confirmPassword")}
@@ -205,17 +207,17 @@ export function RegisterForm() {
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Creating account...
+            {t("Auth.signingUp")}
           </>
         ) : (
-          "Create Account"
+          t("Auth.createAccount")
         )}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Already have an account?{" "}
+        {t("Auth.hasAccount")}{" "}
         <Link href="/login" className="font-medium text-primary hover:underline">
-          Sign in
+          {t("Auth.signInLink")}
         </Link>
       </p>
     </motion.form>
