@@ -17,8 +17,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 export default function ContactPage() {
+  const t = useTranslations()
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
   const [email, setEmail] = useState("")
@@ -44,30 +46,26 @@ export default function ContactPage() {
           className="text-center mb-12"
         >
           <p className="text-sm font-medium text-primary uppercase tracking-wider mb-2">
-            Contact
+            {t("Contact.label")}
           </p>
           <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-deep-burgundy mb-3">
-            Let&apos;s create something beautiful
+            {t("Contact.title")}
           </h1>
           <p className="text-muted-foreground max-w-lg mx-auto">
-            Questions about an order, a custom design, or a full event? We&apos;re here.
+            {t("Contact.subtitle")}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
-          {/* Info */}
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-2xl border border-border bg-white p-6 space-y-5">
-              <a
-                href="tel:+2519XXXXXXXX"
-                className="flex items-start gap-3 group"
-              >
+              <a href="tel:+2519XXXXXXXX" className="flex items-start gap-3 group">
                 <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center shrink-0">
                   <Phone className="h-4 w-4 text-primary" />
                 </div>
                 <div>
                   <p className="text-sm font-medium group-hover:text-primary transition-colors">
-                    Phone
+                    {t("Contact.phone")}
                   </p>
                   <p className="text-sm text-muted-foreground">+251 9XX XXX XXX</p>
                 </div>
@@ -86,20 +84,17 @@ export default function ContactPage() {
                   <p className="text-sm font-medium group-hover:text-primary transition-colors">
                     WhatsApp
                   </p>
-                  <p className="text-sm text-muted-foreground">Chat with us anytime</p>
+                  <p className="text-sm text-muted-foreground">{t("Contact.whatsappHint")}</p>
                 </div>
               </a>
 
-              <a
-                href="mailto:hello@decore.et"
-                className="flex items-start gap-3 group"
-              >
+              <a href="mailto:hello@decore.et" className="flex items-start gap-3 group">
                 <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center shrink-0">
                   <Mail className="h-4 w-4 text-primary" />
                 </div>
                 <div>
                   <p className="text-sm font-medium group-hover:text-primary transition-colors">
-                    Email
+                    {t("Contact.email")}
                   </p>
                   <p className="text-sm text-muted-foreground">hello@decore.et</p>
                 </div>
@@ -110,9 +105,9 @@ export default function ContactPage() {
                   <MapPin className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium">Studio</p>
+                  <p className="text-sm font-medium">{t("Contact.studio")}</p>
                   <p className="text-sm text-muted-foreground">
-                    Addis Ababa, Ethiopia
+                    {t("Footer.location")}
                   </p>
                 </div>
               </div>
@@ -140,7 +135,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Form */}
           <div className="lg:col-span-3">
             {sent ? (
               <motion.div
@@ -152,13 +146,13 @@ export default function ContactPage() {
                   <Check className="h-6 w-6 text-primary" />
                 </div>
                 <h2 className="font-serif text-xl font-semibold text-deep-burgundy mb-2">
-                  Message sent
+                  {t("Contact.sentTitle")}
                 </h2>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Thank you, {name}. We&apos;ll get back to you soon.
+                  {t("Contact.sentThanks")} {name}. {t("Contact.sentHint")}
                 </p>
                 <Button variant="outline" onClick={() => setSent(false)}>
-                  Send another
+                  {t("Contact.sendAnother")}
                 </Button>
               </motion.div>
             ) : (
@@ -168,17 +162,17 @@ export default function ContactPage() {
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name *</Label>
+                    <Label htmlFor="name">{t("Contact.name")} *</Label>
                     <Input
                       id="name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      placeholder="Your name"
+                      placeholder={t("Contact.namePlaceholder")}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone</Label>
+                    <Label htmlFor="phone">{t("Contact.phone")}</Label>
                     <Input
                       id="phone"
                       type="tel"
@@ -189,7 +183,7 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t("Contact.email")}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -199,26 +193,26 @@ export default function ContactPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="message">Message *</Label>
+                  <Label htmlFor="message">{t("Contact.message")} *</Label>
                   <Textarea
                     id="message"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     required
                     rows={5}
-                    placeholder="Tell us about your event, order, or question..."
+                    placeholder={t("Contact.messagePlaceholder")}
                   />
                 </div>
                 <Button type="submit" size="lg" className="w-full gap-2" disabled={loading}>
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      Sending...
+                      {t("Contact.sending")}
                     </>
                   ) : (
                     <>
                       <Send className="h-4 w-4" />
-                      Send Message
+                      {t("Contact.send")}
                     </>
                   )}
                 </Button>
