@@ -1,13 +1,12 @@
-import Link from "next/link"
-import type { Metadata } from "next"
-import { LoginForm } from "@/components/auth/login-form"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Sign In",
-  description: "Sign in to your Decore account to track orders and manage bookings.",
-}
+import Link from "next/link"
+import { LoginForm } from "@/components/auth/login-form"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 export default function LoginPage() {
+  const t = useTranslations()
+
   return (
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-deep-burgundy via-primary to-rose items-center justify-center p-12">
@@ -18,13 +17,13 @@ export default function LoginPage() {
         <div className="relative z-10 text-white max-w-md">
           <Link href="/" className="inline-flex items-center gap-2 mb-10">
             <span className="text-3xl">🌸</span>
-            <span className="font-serif text-3xl font-semibold tracking-tight">Decore</span>
+            <span className="font-serif text-3xl font-semibold tracking-tight">ዲኮር</span>
           </Link>
           <h1 className="font-serif text-4xl font-semibold leading-tight mb-4">
-            Where Flowers<br />Become Memories
+            {t("Auth.sideTitle")}
           </h1>
           <p className="text-white/80 text-lg leading-relaxed">
-            Sign in to track your orders, manage event bookings, and save your favorite designs.
+            {t("Auth.sideSubtitle")}
           </p>
         </div>
       </div>
@@ -34,11 +33,13 @@ export default function LoginPage() {
           <div className="lg:hidden mb-8 text-center">
             <Link href="/" className="inline-flex items-center gap-2">
               <span className="text-2xl">🌸</span>
-              <span className="font-serif text-2xl font-semibold text-deep-burgundy">Decore</span>
+              <span className="font-serif text-2xl font-semibold text-deep-burgundy">ዲኮር</span>
             </Link>
           </div>
-          <h2 className="font-serif text-3xl font-semibold text-deep-burgundy mb-2">Welcome back</h2>
-          <p className="text-muted-foreground mb-8">Sign in to your account to continue</p>
+          <h2 className="font-serif text-3xl font-semibold text-deep-burgundy mb-2">
+            {t("Auth.welcomeBack")}
+          </h2>
+          <p className="text-muted-foreground mb-8">{t("Auth.signInContinue")}</p>
           <LoginForm />
         </div>
       </div>
