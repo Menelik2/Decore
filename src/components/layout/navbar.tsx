@@ -8,22 +8,25 @@ import { Menu, X, ShoppingBag, Heart, User, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useCart } from "@/lib/cart-context"
-
-const navLinks = [
-  { href: "/flowers", label: "Flowers" },
-  { href: "/designs", label: "Designs" },
-  { href: "/decorations", label: "Decorations" },
-  { href: "/custom-design", label: "Custom" },
-  { href: "/booking", label: "Book Event" },
-  { href: "/about", label: "About" },
-]
+import { useTranslations } from "@/lib/i18n/locale-context"
+import { LanguageSwitcher } from "@/components/layout/language-switcher"
 
 export function Navbar() {
+  const t = useTranslations()
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { itemCount } = useCart()
   const pathname = usePathname()
   const isAdmin = pathname?.startsWith("/admin")
+
+  const navLinks = [
+    { href: "/flowers", label: t("Nav.flowers") },
+    { href: "/designs", label: t("Nav.designs") },
+    { href: "/decorations", label: t("Nav.decorations") },
+    { href: "/custom-design", label: t("Nav.custom") },
+    { href: "/booking", label: t("Nav.bookEvent") },
+    { href: "/about", label: t("Nav.about") },
+  ]
 
   useEffect(() => {
     if (isAdmin) return
@@ -53,7 +56,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-1.5 group pressable">
             <span className="text-xl leading-none">🌸</span>
             <span className="text-[17px] font-semibold tracking-tight text-label group-hover:text-primary transition-colors">
-              Decore
+              ዲኮር
             </span>
           </Link>
 
@@ -78,12 +81,14 @@ export function Navbar() {
             })}
           </nav>
 
-          <div className="flex items-center gap-0">
+          <div className="flex items-center gap-0.5">
+            <LanguageSwitcher className="hidden sm:inline-flex mr-1" compact />
+
             <Button
               variant="ghost"
               size="icon"
               className="hidden sm:flex h-11 w-11 text-label-secondary hover:text-label"
-              aria-label="Search"
+              aria-label={t("Nav.search")}
             >
               <Search className="h-[20px] w-[20px] stroke-[1.75]" />
             </Button>
@@ -92,7 +97,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 className="h-11 w-11 text-label-secondary hover:text-label"
-                aria-label="Favorites"
+                aria-label={t("Nav.favorites")}
               >
                 <Heart className="h-[20px] w-[20px] stroke-[1.75]" />
               </Button>
@@ -102,7 +107,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 className="relative h-11 w-11 text-label-secondary hover:text-label"
-                aria-label="Cart"
+                aria-label={t("Nav.cart")}
               >
                 <ShoppingBag className="h-[20px] w-[20px] stroke-[1.75]" />
                 {itemCount > 0 && (
@@ -117,7 +122,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 className="h-11 w-11 text-label-secondary hover:text-label"
-                aria-label="Account"
+                aria-label={t("Nav.account")}
               >
                 <User className="h-[20px] w-[20px] stroke-[1.75]" />
               </Button>
@@ -127,7 +132,7 @@ export function Navbar() {
               size="icon"
               className="lg:hidden h-11 w-11 text-label-secondary hover:text-label"
               onClick={() => setIsOpen(!isOpen)}
-              aria-label="Menu"
+              aria-label={t("Nav.menu")}
               aria-expanded={isOpen}
             >
               {isOpen ? (
@@ -168,14 +173,17 @@ export function Navbar() {
                   </Link>
                 )
               })}
+              <div className="mt-2 px-1 flex items-center justify-between">
+                <LanguageSwitcher />
+              </div>
               <div className="mt-2 pt-3 border-t border-black/[0.06] flex gap-2.5 px-1">
                 <Link href="/login" className="flex-1" onClick={() => setIsOpen(false)}>
                   <Button variant="secondary" className="w-full">
-                    Sign In
+                    {t("Nav.signIn")}
                   </Button>
                 </Link>
                 <Link href="/register" className="flex-1" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full">Sign Up</Button>
+                  <Button className="w-full">{t("Nav.signUp")}</Button>
                 </Link>
               </div>
             </nav>
