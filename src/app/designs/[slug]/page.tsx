@@ -20,6 +20,21 @@ import {
   getDesignBySlug,
   getRelatedDesigns,
 } from "@/lib/data/designs"
+import { useTranslations } from "@/lib/i18n/locale-context"
+
+const categoryKeyMap: Record<string, string> = {
+  flowers: "flowers",
+  bouquets: "bouquets",
+  weddings: "weddings",
+  birthdays: "birthdays",
+  graduation: "graduation",
+  engagement: "engagement",
+  "baby-shower": "babyShower",
+  corporate: "corporate",
+  "ethiopian-traditional": "ethiopianTraditional",
+  events: "events",
+  "home-decor": "homeDecor",
+}
 
 export default function DesignDetailPage({
   params,
@@ -27,6 +42,7 @@ export default function DesignDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = use(params)
+  const t = useTranslations()
   const [activeImage, setActiveImage] = useState(0)
   const [liked, setLiked] = useState(false)
   const [added, setAdded] = useState(false)
@@ -38,11 +54,31 @@ export default function DesignDetailPage({
     notFound()
   }
 
+  const title =
+    t(`Designs.${design.slug}.title`) !== `Designs.${design.slug}.title`
+      ? t(`Designs.${design.slug}.title`)
+      : design.title
+  const description =
+    t(`Designs.${design.slug}.description`) !==
+    `Designs.${design.slug}.description`
+      ? t(`Designs.${design.slug}.description`)
+      : design.description
+  const categoryKey = categoryKeyMap[design.categorySlug] ?? "all"
+  const categoryLabel = t(`Categories.${categoryKey}`)
+  const sizeLabel =
+    t(`Catalog.sizes.${design.size}`) !== `Catalog.sizes.${design.size}`
+      ? t(`Catalog.sizes.${design.size}`)
+      : design.size
+  const occasionLabel =
+    t(`Booking.events.${design.occasion}`) !==
+    `Booking.events.${design.occasion}`
+      ? t(`Booking.events.${design.occasion}`)
+      : design.occasion.replace(/_/g, " ").toLowerCase()
+
   const related = getRelatedDesigns(design)
 
   const imageCount = design.images.length || 1
-  const nextImage = () =>
-    setActiveImage((i) => (i + 1) % imageCount)
+  const nextImage = () => setActiveImage((i) => (i + 1) % imageCount)
   const prevImage = () =>
     setActiveImage((i) => (i - 1 + imageCount) % imageCount)
 
@@ -50,7 +86,7 @@ export default function DesignDetailPage({
     addItem({
       id: design.id,
       design_id: design.id,
-      name: design.title,
+      name: title,
       price: design.startingPrice,
       image: design.images[0]?.url,
       slug: design.slug,
@@ -61,21 +97,18 @@ export default function DesignDetailPage({
 
   return (
     <div className="min-h-screen pt-20 pb-20">
-      {/* Back */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-6">
         <Link
           href="/designs"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Gallery
+          {t("Catalog.backToGallery")}
         </Link>
       </div>
 
-      {/* Main content */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14">
-          {/* Gallery */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -85,7 +118,7 @@ export default function DesignDetailPage({
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted">
               <img
                 src={design.images[activeImage]?.url}
-                alt={design.images[activeImage]?.alt || design.title}
+                alt={design.images[activeImage]?.alt || title}
                 className="h-full w-full object-cover"
               />
 
@@ -108,22 +141,20 @@ export default function DesignDetailPage({
                 </>
               )}
 
-              {/* Badges */}
               <div className="absolute top-4 left-4 flex gap-1.5">
                 {design.isNew && (
                   <span className="rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white">
-                    New
+                    {t("Catalog.new")}
                   </span>
                 )}
                 {design.isTrending && (
                   <span className="rounded-full bg-gold px-3 py-1 text-xs font-semibold text-white">
-                    Trending
+                    {t("Catalog.trending")}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* Thumbnails */}
             {design.images.length > 1 && (
               <div className="flex gap-3">
                 {design.images.map((img, i) => (
@@ -147,7 +178,6 @@ export default function DesignDetailPage({
             )}
           </motion.div>
 
-          {/* Details */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -155,39 +185,36 @@ export default function DesignDetailPage({
             className="flex flex-col"
           >
             <p className="text-sm font-medium text-primary uppercase tracking-wider mb-2">
-              {design.category}
+              {categoryLabel}
             </p>
             <h1 className="font-serif text-3xl sm:text-4xl font-semibold text-deep-burgundy leading-tight mb-3">
-              {design.title}
+              {title}
             </h1>
 
-            {/* Rating */}
             <div className="flex items-center gap-1.5 mb-5">
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star key={s} className="h-4 w-4 fill-gold text-gold" />
               ))}
               <span className="text-sm text-muted-foreground ml-1">
-                4.9 (24 reviews)
+                4.9 (24 {t("Catalog.reviews")})
               </span>
             </div>
 
             <p className="text-2xl font-semibold text-foreground mb-6">
-              From {formatPrice(design.startingPrice)}
+              {t("Common.from")} {formatPrice(design.startingPrice)}
               <span className="text-sm font-normal text-muted-foreground ml-2">
-                ETB
+                {t("Common.etb")}
               </span>
             </p>
 
             <p className="text-muted-foreground leading-relaxed mb-8">
-              {design.description}
+              {description}
             </p>
 
-            {/* Meta details */}
             <div className="space-y-5 mb-8">
-              {/* Color palette */}
               <div>
                 <h3 className="text-sm font-medium text-foreground mb-2.5">
-                  Color Palette
+                  {t("Catalog.colorPalette")}
                 </h3>
                 <div className="flex gap-2">
                   {design.colorPalette.map((color) => (
@@ -201,10 +228,9 @@ export default function DesignDetailPage({
                 </div>
               </div>
 
-              {/* Materials */}
               <div>
                 <h3 className="text-sm font-medium text-foreground mb-2.5">
-                  Materials & Flowers
+                  {t("Catalog.materialsFlowers")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {[...design.materials, ...design.flowerTypes].map((item) => (
@@ -218,29 +244,29 @@ export default function DesignDetailPage({
                 </div>
               </div>
 
-              {/* Size & Occasion */}
               <div className="flex flex-wrap items-center gap-6 text-sm">
                 <div>
-                  <span className="text-muted-foreground">Size:</span>{" "}
-                  <span className="font-medium">{design.size}</span>
+                  <span className="text-muted-foreground">
+                    {t("Catalog.size")}:
+                  </span>{" "}
+                  <span className="font-medium">{sizeLabel}</span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Occasion:</span>{" "}
-                  <span className="font-medium capitalize">
-                    {design.occasion.replace(/_/g, " ").toLowerCase()}
-                  </span>
+                  <span className="text-muted-foreground">
+                    {t("Catalog.occasion")}:
+                  </span>{" "}
+                  <span className="font-medium">{occasionLabel}</span>
                 </div>
               </div>
             </div>
 
-            {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-3 mt-auto">
               <Button size="lg" className="flex-1 w-full" onClick={handleAddToCart}>
-                {added ? "Added to Cart ✓" : "Add to Cart"}
+                {added ? t("Catalog.addedToCart") : t("Catalog.addToCart")}
               </Button>
               <Link href={`/booking?design=${design.slug}`} className="flex-1">
                 <Button size="lg" variant="outline" className="w-full">
-                  Book as Event
+                  {t("Catalog.bookAsEvent")}
                 </Button>
               </Link>
               <Button
@@ -259,18 +285,16 @@ export default function DesignDetailPage({
               </Button>
             </div>
 
-            {/* Trust note */}
             <p className="mt-6 text-xs text-muted-foreground">
-              🇪🇹 Designed & crafted in Ethiopia · Free consultation · Customization available
+              🇪🇹 {t("Catalog.trustNote")}
             </p>
           </motion.div>
         </div>
 
-        {/* Related */}
         {related.length > 0 && (
           <section className="mt-20">
             <h2 className="font-serif text-2xl md:text-3xl font-semibold text-deep-burgundy mb-8">
-              Related Designs
+              {t("Catalog.relatedDesigns")}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {related.map((d, i) => (
