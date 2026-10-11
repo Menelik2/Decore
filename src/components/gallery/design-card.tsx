@@ -8,14 +8,42 @@ import { Button } from "@/components/ui/button"
 import { ImageCard3D } from "@/components/shared/image-card-3d"
 import { formatPrice } from "@/lib/utils"
 import type { Design } from "@/lib/data/designs"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 interface DesignCardProps {
   design: Design
   index?: number
 }
 
+const categoryKeyMap: Record<string, string> = {
+  all: "all",
+  flowers: "flowers",
+  bouquets: "bouquets",
+  weddings: "weddings",
+  birthdays: "birthdays",
+  graduation: "graduation",
+  engagement: "engagement",
+  "baby-shower": "babyShower",
+  corporate: "corporate",
+  "ethiopian-traditional": "ethiopianTraditional",
+  events: "events",
+  "home-decor": "homeDecor",
+}
+
 export function DesignCard({ design, index = 0 }: DesignCardProps) {
   const { addItem } = useCart()
+  const t = useTranslations()
+
+  const title =
+    t(`Designs.${design.slug}.title`) !== `Designs.${design.slug}.title`
+      ? t(`Designs.${design.slug}.title`)
+      : design.title
+  const categoryKey = categoryKeyMap[design.categorySlug] ?? "all"
+  const categoryLabel = t(`Categories.${categoryKey}`)
+  const sizeLabel =
+    t(`Catalog.sizes.${design.size}`) !== `Catalog.sizes.${design.size}`
+      ? t(`Catalog.sizes.${design.size}`)
+      : design.size
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -23,7 +51,7 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
     addItem({
       id: design.id,
       design_id: design.id,
-      name: design.title,
+      name: title,
       price: design.startingPrice,
       image: design.images[0]?.url,
       slug: design.slug,
@@ -69,7 +97,7 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={design.images[0]?.url}
-              alt={design.images[0]?.alt || design.title}
+              alt={design.images[0]?.alt || title}
               className="h-full w-full object-cover scale-110 transition-transform duration-700 ease-out group-hover:scale-[1.18]"
               loading="lazy"
             />
@@ -87,17 +115,17 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
             {design.isNew && (
               <span className="inline-flex items-center gap-1 rounded-full bg-primary/95 backdrop-blur-sm px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white shadow-lg shadow-primary/30">
                 <Sparkles className="h-3 w-3" />
-                New
+                {t("Catalog.new")}
               </span>
             )}
             {design.isTrending && (
               <span className="rounded-full bg-gold/95 backdrop-blur-sm px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white shadow-lg shadow-gold/30">
-                Trending
+                {t("Catalog.trending")}
               </span>
             )}
             {design.isFeatured && !design.isNew && !design.isTrending && (
               <span className="rounded-full bg-deep-burgundy/95 backdrop-blur-sm px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white shadow-lg">
-                Featured
+                {t("Catalog.featured")}
               </span>
             )}
           </div>
@@ -135,7 +163,7 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
                 className="w-full text-xs gap-1.5 shadow-xl shadow-black/20 backdrop-blur-sm"
               >
                 <Eye className="h-3.5 w-3.5" />
-                View
+                {t("Catalog.view")}
               </Button>
             </Link>
             <Button
@@ -145,7 +173,7 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
               onClick={handleAdd}
             >
               <ShoppingBag className="h-3.5 w-3.5" />
-              Add
+              {t("Catalog.add")}
             </Button>
           </div>
         </div>
@@ -153,17 +181,17 @@ export function DesignCard({ design, index = 0 }: DesignCardProps) {
 
       <div className="mt-4 px-0.5">
         <p className="text-[11px] font-medium text-primary uppercase tracking-wider mb-1">
-          {design.category}
+          {categoryLabel}
         </p>
         <h3 className="font-medium text-[15px] text-foreground leading-snug group-hover:text-primary transition-colors duration-300">
-          <Link href={`/designs/${design.slug}`}>{design.title}</Link>
+          <Link href={`/designs/${design.slug}`}>{title}</Link>
         </h3>
         <div className="mt-1.5 flex items-center justify-between gap-2">
           <p className="text-sm font-semibold text-foreground/90">
-            From {formatPrice(design.startingPrice)}
+            {t("Common.from")} {formatPrice(design.startingPrice)}
           </p>
           <span className="text-[10px] text-muted-foreground truncate max-w-[40%]">
-            {design.size}
+            {sizeLabel}
           </span>
         </div>
       </div>
