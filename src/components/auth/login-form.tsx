@@ -12,8 +12,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { loginSchema, type LoginInput } from "@/lib/auth-schema"
 import { createClient } from "@/lib/supabase/client"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 export function LoginForm() {
+  const t = useTranslations()
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -32,12 +34,10 @@ export function LoginForm() {
     setServerError(null)
 
     try {
-      // Check if Supabase is configured
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL
       const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
       if (!url || !key || url.includes("your_supabase")) {
-        // Demo mode when Supabase is not configured
         await new Promise((r) => setTimeout(r, 800))
         setServerError(
           "Supabase is not configured yet. Add your keys to .env.local to enable real authentication. (Demo: form validated successfully)"
@@ -61,7 +61,7 @@ export function LoginForm() {
       router.push("/account")
       router.refresh()
     } catch {
-      setServerError("Something went wrong. Please try again.")
+      setServerError(t("Validation.somethingWrong"))
       setLoading(false)
     }
   }
@@ -81,13 +81,13 @@ export function LoginForm() {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">{t("Auth.email")}</Label>
         <div className="relative">
           <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             id="email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={t("Auth.emailPlaceholder")}
             className="pl-10"
             autoComplete="email"
             {...register("email")}
@@ -100,12 +100,12 @@ export function LoginForm() {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{t("Auth.password")}</Label>
           <Link
             href="/forgot-password"
             className="text-xs text-primary hover:underline"
           >
-            Forgot password?
+            {t("Auth.forgotPassword")}
           </Link>
         </div>
         <div className="relative">
@@ -122,7 +122,7 @@ export function LoginForm() {
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-label={showPassword ? t("Auth.hidePassword") : t("Auth.showPassword")}
           >
             {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
@@ -136,17 +136,17 @@ export function LoginForm() {
         {loading ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Signing in...
+            {t("Auth.signingIn")}
           </>
         ) : (
-          "Sign In"
+          t("Auth.signIn")
         )}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{" "}
+        {t("Auth.noAccount")}{" "}
         <Link href="/register" className="font-medium text-primary hover:underline">
-          Create one
+          {t("Auth.createOne")}
         </Link>
       </p>
     </motion.form>
