@@ -1,13 +1,12 @@
-import Link from "next/link"
-import type { Metadata } from "next"
-import { RegisterForm } from "@/components/auth/register-form"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Create Account",
-  description: "Join Decore to order premium flowers and book event decorations in Ethiopia.",
-}
+import Link from "next/link"
+import { RegisterForm } from "@/components/auth/register-form"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 export default function RegisterPage() {
+  const t = useTranslations()
+
   return (
     <div className="min-h-screen flex">
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-deep-burgundy via-primary to-rose items-center justify-center p-12">
@@ -18,13 +17,13 @@ export default function RegisterPage() {
         <div className="relative z-10 text-white max-w-md">
           <Link href="/" className="inline-flex items-center gap-2 mb-10">
             <span className="text-3xl">🌸</span>
-            <span className="font-serif text-3xl font-semibold tracking-tight">Decore</span>
+            <span className="font-serif text-3xl font-semibold tracking-tight">ዲኮር</span>
           </Link>
           <h1 className="font-serif text-4xl font-semibold leading-tight mb-4">
-            Join the Decore<br />family
+            {t("Auth.sideTitle")}
           </h1>
           <p className="text-white/80 text-lg leading-relaxed">
-            Create an account to order flowers, book event decorations, and track everything in one place.
+            {t("Auth.registerSideSubtitle")}
           </p>
         </div>
       </div>
@@ -34,11 +33,13 @@ export default function RegisterPage() {
           <div className="lg:hidden mb-8 text-center">
             <Link href="/" className="inline-flex items-center gap-2">
               <span className="text-2xl">🌸</span>
-              <span className="font-serif text-2xl font-semibold text-deep-burgundy">Decore</span>
+              <span className="font-serif text-2xl font-semibold text-deep-burgundy">ዲኮር</span>
             </Link>
           </div>
-          <h2 className="font-serif text-3xl font-semibold text-deep-burgundy mb-2">Create your account</h2>
-          <p className="text-muted-foreground mb-8">Start ordering premium flowers and decorations</p>
+          <h2 className="font-serif text-3xl font-semibold text-deep-burgundy mb-2">
+            {t("Auth.createAccount")}
+          </h2>
+          <p className="text-muted-foreground mb-8">{t("Auth.registerSideSubtitle")}</p>
           <RegisterForm />
         </div>
       </div>
