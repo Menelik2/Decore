@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
-import { Playfair_Display } from "next/font/google"
+import { Playfair_Display, Noto_Sans_Ethiopic } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/layout/navbar"
 import { Footer } from "@/components/layout/footer"
@@ -23,33 +23,43 @@ const playfair = Playfair_Display({
   weight: ["400", "500", "600", "700"],
 })
 
+const notoEthiopic = Noto_Sans_Ethiopic({
+  variable: "--font-ethiopic",
+  subsets: ["ethiopic"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+})
+
 export const metadata: Metadata = {
   title: {
-    default: "Decore — Premium Flowers & Event Decorations",
-    template: "%s | Decore",
+    default: "ዲኮር — ፕሪሚየም አበቦች እና የዝግጅት ጌጣጌጦች",
+    template: "%s | ዲኮር",
   },
   description:
-    "Beautiful flowers, elegant decorations, and unforgettable event experiences in Ethiopia. Luxury floral design and event decoration studio.",
+    "በኢትዮጵያ ውስጥ የሚገኝ የቅንጦት የአበባ ንድፍ እና የዝግጅት ጌጣጌጥ ስቱዲዮ። አበቦች ትውስታ ይሆናሉ።",
   keywords: [
+    "አበቦች ኢትዮጵያ",
+    "የሰርግ ጌጣጌጥ አዲስ አበባ",
+    "የዝግጅት ጌጣጌጥ",
+    "የሰርግ እቅፍ",
+    "የኢትዮጵያ ባህላዊ ጌጣጌጥ",
     "flowers Ethiopia",
     "wedding decoration Addis Ababa",
     "event decoration",
-    "bridal bouquet",
-    "Ethiopian traditional decoration",
-    "flower delivery",
   ],
   openGraph: {
     type: "website",
-    locale: "en_ET",
-    siteName: "Decore",
-    title: "Decore — Premium Flowers & Event Decorations",
+    locale: "am_ET",
+    alternateLocale: ["en_ET"],
+    siteName: "ዲኮር | Decore",
+    title: "ዲኮር — ፕሪሚዯም አበቦች እና የዝግጅት ጌጣጌጦች",
     description:
-      "Where Flowers Become Memories. Luxury floral design and event decoration in Ethiopia.",
+      "አበቦች ትውስታ ይሆናሉ። በኢትዮጵያ ውስጥ የቅንጦት የአበባ ንድፍ እና የዝግጅት ጌጣጌጥ።",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Decore — Premium Flowers & Event Decorations",
-    description: "Where Flowers Become Memories.",
+    title: "ዲኮር — ፕሪሚየም አበቦች እና የዝግጅት ጌጣጌጦች",
+    description: "አበቦች ትውስታ ይሆናሉ።",
   },
   robots: {
     index: true,
@@ -58,7 +68,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Decore",
+    title: "ዲኮር",
   },
   formatDetection: {
     telephone: true,
@@ -83,8 +93,8 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} h-full antialiased`}
+      lang="am"
+      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${notoEthiopic.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>
