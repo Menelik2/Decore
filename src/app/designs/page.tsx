@@ -5,8 +5,10 @@ import { motion } from "framer-motion"
 import { DesignCard } from "@/components/gallery/design-card"
 import { GalleryFilters } from "@/components/gallery/gallery-filters"
 import { designs } from "@/lib/data/designs"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 export default function DesignsPage() {
+  const t = useTranslations()
   const [search, setSearch] = useState("")
   const [category, setCategory] = useState("all")
   const [sort, setSort] = useState("featured")
@@ -30,7 +32,7 @@ export default function DesignsPage() {
           d.title.toLowerCase().includes(q) ||
           d.description.toLowerCase().includes(q) ||
           d.category.toLowerCase().includes(q) ||
-          d.tags.some((t) => t.includes(q)) ||
+          d.tags.some((tag) => tag.includes(q)) ||
           d.flowerTypes.some((f) => f.toLowerCase().includes(q)) ||
           d.materials.some((m) => m.toLowerCase().includes(q))
       )
@@ -65,16 +67,11 @@ export default function DesignsPage() {
 
   return (
     <div className="min-h-screen pt-24 pb-24 relative overflow-hidden">
-      {/* Soft luxury background atmosphere */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10"
-        aria-hidden
-      >
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[40vh] rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute bottom-1/4 right-0 w-[40vw] h-[30vh] rounded-full bg-gold/10 blur-3xl" />
       </div>
 
-      {/* Header */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-12">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -82,19 +79,17 @@ export default function DesignsPage() {
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
           <p className="text-sm font-medium text-primary uppercase tracking-[0.2em] mb-3">
-            Portfolio
+            {t("Gallery.label")}
           </p>
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-semibold text-deep-burgundy mb-4 leading-tight">
-            Design Gallery
+            {t("Gallery.title")}
           </h1>
           <p className="text-muted-foreground max-w-xl text-base sm:text-lg leading-relaxed">
-            Explore premium floral designs and event decorations — tilt, hover,
-            and discover the details in three dimensions.
+            {t("Gallery.subtitle")}
           </p>
         </motion.div>
       </div>
 
-      {/* Filters + Grid */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <GalleryFilters
           search={search}
@@ -112,10 +107,10 @@ export default function DesignsPage() {
           <div className="py-24 text-center">
             <p className="text-5xl mb-4">🌸</p>
             <h3 className="font-serif text-xl font-medium text-deep-burgundy mb-2">
-              No designs found
+              {t("Gallery.noResults")}
             </h3>
             <p className="text-muted-foreground mb-6">
-              Try adjusting your search or filters
+              {t("Gallery.noResultsHint")}
             </p>
             <button
               onClick={() => {
@@ -125,7 +120,7 @@ export default function DesignsPage() {
               }}
               className="text-sm font-medium text-primary hover:underline"
             >
-              Clear all filters
+              {t("Gallery.clearFilters")}
             </button>
           </div>
         ) : (
