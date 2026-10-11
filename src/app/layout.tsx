@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     locale: "am_ET",
     alternateLocale: ["en_ET"],
     siteName: "ዲኮር | Decore",
-    title: "ዲኮር — ፕሪሚዯም አበቦች እና የዝግጅት ጌጣጌጦች",
+    title: "ዲኮር — ፕሪሚየም አበቦች እና የዝግጅት ጌጣጌጦች",
     description:
       "አበቦች ትውስታ ይሆናሉ። በኢትዮጵያ ውስጥ የቅንጦት የአበባ ንድፍ እና የዝግጅት ጌጣጌጥ።",
   },
