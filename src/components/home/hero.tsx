@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Sparkles } from "lucide-react"
 import { useRef } from "react"
+import { useTranslations } from "@/lib/i18n/locale-context"
 
 const HeroCanvas = dynamic(
   () => import("./three/hero-canvas").then((m) => m.HeroCanvas),
@@ -69,6 +70,8 @@ function GlassPanel({ children }: { children: React.ReactNode }) {
 }
 
 export function Hero() {
+  const t = useTranslations()
+
   return (
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden glass-mesh">
       <HeroCanvas />
@@ -100,18 +103,18 @@ export function Hero() {
             className="inline-flex items-center gap-2 glass-chip rounded-full px-3.5 py-1.5 mb-5 text-[12px] font-semibold text-deep-burgundy"
           >
             <Sparkles className="h-3.5 w-3.5 text-gold" />
-            Premium Floral Studio
+            {t("Hero.badge")}
           </motion.div>
 
           <motion.h1
-            className="text-[32px] sm:text-[40px] md:text-[44px] font-bold tracking-tight text-label leading-[1.1] mb-3"
+            className="text-[32px] sm:text-[40px] md:text-[44px] font-bold tracking-tight text-label leading-[1.15] mb-3"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.22, duration: 0.65 }}
           >
-            Where Flowers
+            {t("Hero.title1")}
             <br />
-            <span className="text-gradient">Become Memories</span>
+            <span className="text-gradient">{t("Hero.title2")}</span>
           </motion.h1>
 
           <motion.p
@@ -120,7 +123,7 @@ export function Hero() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.35 }}
           >
-            Elegant florals & event décor crafted in Ethiopia — delivered with care.
+            {t("Hero.subtitle")}
           </motion.p>
 
           <motion.div
@@ -133,14 +136,14 @@ export function Hero() {
               href="/designs"
               className="inline-flex items-center justify-center gap-2 h-12 px-6 rounded-full bg-primary text-white text-[15px] font-semibold shadow-lg shadow-primary/25 active:scale-[0.97] transition-transform w-full sm:w-auto"
             >
-              Explore Designs
+              {t("Hero.exploreDesigns")}
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/booking"
               className="inline-flex items-center justify-center h-12 px-6 rounded-full glass text-[15px] font-semibold text-label active:scale-[0.97] transition-transform w-full sm:w-auto"
             >
-              Book Decorations
+              {t("Hero.bookDecorations")}
             </Link>
           </motion.div>
         </GlassPanel>
@@ -152,9 +155,9 @@ export function Hero() {
           transition={{ delay: 0.55, duration: 0.55 }}
         >
           {[
-            { value: "500+", label: "Events" },
-            { value: "4.9★", label: "Rating" },
-            { value: "ET", label: "Ethiopia" },
+            { value: "500+", label: t("Hero.events") },
+            { value: "4.9★", label: t("Hero.rating") },
+            { value: "ET", label: t("Hero.ethiopia") },
           ].map((s) => (
             <div key={s.label} className="glass rounded-2xl py-3 px-2 text-center">
               <p className="text-[16px] font-bold text-label tracking-tight">{s.value}</p>
